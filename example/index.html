@@ -12,41 +12,52 @@
 
 <body ng-controller="manyToOneCtrl">
 
-  <h3>Para o funcionamento do exemplo a seguir é necessária a instalação dos componentes:</h3>
-  <ul>
-    <li>Gumga Rest</li>
-    <li>Gumga Controller</li>
-  </ul>
-<pre>
-npm install gumga-rest-ng
-npm install gumga-controller-ng
-// ou
-boewr install gumga-rest-ng
-boewr install gumga-controller-ng
-</pre>
-  <div class="row">
-    <form name="Example">
-      <div class="col-md-6">
-        <gumga-many-to-one value="pessoa" search-method="pessoas.methods.asyncSearch('nome', param)" editable="false" field="nome"
-          authorize-add="false" async="true" display-info="false">
-          <match>
-            <div>{{match.model.nome}}</div>
-          </match>
-          </gumga-many-to-one>
-          <label>Selecionado</label>
-          <pre>{{pessoal | json}}</pre>
-      </div>
-      <div class="col-md-6">
-        <gumga-many-to-one value="produto" search-method="pessoas.methods.asyncSearch('nome', param)" editable="false" field="nome"
-          authorize-add="false" async="true" display-info="false">
-          <match>
-            <div>{{match.model.nome}} - {{match.model.nomeFonetico}}</div>
-          </match>
-          </gumga-many-to-one>
-          <label>Selecionado</label>
-          <pre>{{produto | json}}</pre>
-      </div>
-    </form>
+  <div class="container">
+    <h3>Para o funcionamento do exemplo a seguir é necessária a instalação dos componentes:</h3>
+    <ul>
+      <li>Gumga Rest</li>
+      <li>Gumga Controller</li>
+    </ul>
+  <pre>
+  npm install gumga-rest-ng
+  npm install gumga-controller-ng
+  // ou
+  boewr install gumga-rest-ng
+  boewr install gumga-controller-ng
+  </pre>
+    <div class="row">
+      <form name="Example">
+        <div class="col-md-6">
+          <gumga-many-to-one value="pessoa" search-method="pessoas.methods.asyncSearch('nome', param)" editable="false" field="nome"
+            authorize-add="false" async="true" display-info="false">
+            <match>
+              <div>{{match.model.nome}}</div>
+            </match>
+            </gumga-many-to-one>
+            <br>
+            <label>Selecionado</label>
+            <pre>{{pessoa | json}}</pre>
+        </div>
+        <div class="col-md-6">
+          <gumga-many-to-one
+            value="produto"
+            name="produto"
+            disabled="false"
+            search-method="pessoas.methods.asyncSearch('nome', param)"
+            editable="false"
+            input-match="{ item.dataNascimento } - { item.nomeFonetico }"
+            field="nome"
+            authorize-add="false" async="true" display-info="false">
+            <match>
+              <div>{{match.model.id}} - {{match.model.nomeFonetico}}</div>
+            </match>
+            </gumga-many-to-one>
+            <br>
+            <label>Selecionado</label>
+            <pre>{{produto | json}}</pre>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -54,8 +65,8 @@ boewr install gumga-controller-ng
   <script src="../node_modules/angular/angular.min.js"></script>
   <script src="../node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
   <script src="../node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
-  <script src="../ext/gumga-rest/dist/gumga-rest.js"></script>
-  <script src="../ext/gumga-controller/dist/gumga-controller.js"></script>
+  <script src="../node_modules/gumga-rest-ng/dist/gumga-rest.js"></script>
+  <script src="../node_modules/gumga-controller-ng/dist/gumga-controller.js"></script>
   <script src="../dist/gumga-many-to-one.js"></script>
 
   <script>
@@ -65,6 +76,67 @@ boewr install gumga-controller-ng
       })
       .controller('manyToOneCtrl', ['gumgaController', 'GumgaRest', '$scope', '$http',
         function (gumgaController, GumgaRest, $scope, $http) {
+
+          $scope.produto = {
+            "id": 1,
+            "oi": {
+              "value": "92."
+            },
+            "gumgaCustomFields": {},
+            "version": 2,
+            "nomeFonetico": "SECRETARIA IGREJA BATISTA",
+            "apelido": "SECRETARIA",
+            "situacaoCadastral": "APROVADO",
+            "dataNascimento": "2017-03-22T03:00:00Z",
+            "foto": null,
+            "escolaridade": null,
+            "estadoCivil": null,
+            "motivoIntegrante": null,
+            "formacaoAcademica": null,
+            "profissao": null,
+            "empresaTrabalha": null,
+            "naturalidade": null,
+            "nacionalidade": null,
+            "observacao": null,
+            "dataBatismo": null,
+            "numeroFicha": null,
+            "religiaoAnterior": null,
+            "igrejaPertencia": null,
+            "origem": "WEB_PESSOA",
+            "saude": null,
+            "alergias": null,
+            "tipoIntegrante": {
+              "id": 21,
+              "oi": null,
+              "version": 0,
+              "nome": "MEMBRO",
+              "membro": true,
+              "somenteLeitura": true
+            },
+            "documentos": null,
+            "enderecos": null,
+            "enderecoEletronicos": null,
+            "historicos": null,
+            "parentescos": null,
+            "telefones": null,
+            "cargoPessoas": null,
+            "dataProfissaoFe": null,
+            "telefonePrincipal": null,
+            "emailPrincipal": "secretaria@igrejabatista.com.br",
+            "pontoDeDuplicidade": 0,
+            "motivosDuplicidade": "",
+            "nomeIgreja": null,
+            "labels": [],
+            "emailSecurity": null,
+            "organization": "IGREJA BATISTA MARINGA",
+            "ownership": "SECRETARIA@IGREJABATISTA.COM.BR",
+            "idCelulaOrigem": null,
+            "nome": "SECRETARIA IGREJA BATISTA",
+            "ativo": true,
+            "dataCadastro": "2017-03-22T13:14:43Z",
+            "sexo": "NAO_INFORMADO",
+            "type": "PessoaCadastro"
+          };
           var PessoaService = new GumgaRest('http://192.168.25.250/gileadeweb-api/api/pessoacadastro');
           gumgaController.createRestMethods($scope, PessoaService, 'pessoas');
           $scope.pessoas.methods.get();
