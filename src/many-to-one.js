@@ -1,175 +1,216 @@
-(function () {
-  'use strict';
+(function(){
+    'use strict';
 
-  ManyToOne.$inject = ['$templateCache', '$uibModal', '$compile', '$timeout'];
+    ManyToOne.$inject = ['$templateCache','$uibModal', '$compile', '$timeout'];
 
-  function ManyToOne($templateCache, $uibModal, $compile, $timeout) {
-    controller.$inject = ['$scope', '$element', '$attrs', '$transclude'];
+    function ManyToOne($templateCache, $uibModal, $compile, $timeout){
+        controller.$inject = ['$scope', '$element', '$attrs', '$transclude'];
 
-    function controller($scope, $element, $attrs, $transclude) {
-      let manyToOneCtrl = this, ngModelCtrl, ngModelCtrlReset
+        function controller($scope, $element, $attrs, $transclude){
+          let manyToOneCtrl = this, ngModelCtrl, ngModelCtrlReset
 
-      const ERR_MSGS = {
-        noValue: 'É necessário um atributo value no componente gumgaManyToOne',
-        noField: 'É necessário um atributo field no componente gumgaManyToOne',
-        noSearch: 'É necessário uma função de busca no componente gumgaManyToOne'
-      }
-
-      const possibleAttributes = ['value', 'list', 'searchMethod', 'field', 'onNewValueAdded', 'onValueSelected', 'onValueVisualizationOpened', 'onValueVisualizationClosed', 'tabindex']
-
-      let template = false
-
-      if (!$attrs.value) console.error(ERR_MSGS.noValue)
-      if (!$attrs.field) console.error(ERR_MSGS.noField)
-      if (!$attrs.searchMethod) console.error(ERR_MSGS.noSearch)
-
-      manyToOneCtrl.ev = {}
-      manyToOneCtrl.list = manyToOneCtrl.list || []
-      manyToOneCtrl.ev.onNewValueAdded = $attrs.onNewValueAdded ? manyToOneCtrl.onNewValueAdded : angular.noop
-      manyToOneCtrl.ev.onSelect = $attrs.onSelect ? manyToOneCtrl.onSelect : angular.noop
-      manyToOneCtrl.ev.onValueVisualizationOpened = $attrs.onValueVisualizationOpened ? $attrs.onValueVisualizationOpened : angular.noop
-      manyToOneCtrl.ev.onValueVisualizationClosed = $attrs.onValueVisualizationClosed ? $attrs.onValueVisualizationClosed : angular.noop
-      manyToOneCtrl.field = $attrs.field || ''
-      // manyToOneCtrl.description                   = $attrs.description                                         || false
-      manyToOneCtrl.modalTitle = $attrs.modalTitle || 'Visualizador de Registro'
-      manyToOneCtrl.modalFields = $attrs.modalFields ? $attrs.modalFields.split(',') : [manyToOneCtrl.field]
-      manyToOneCtrl.postFields = $attrs.postFields ? $attrs.postFields.split(',') : [manyToOneCtrl.field]
-      manyToOneCtrl.displayClear = manyToOneCtrl.hasOwnProperty('displayClear') ? manyToOneCtrl.displayClear : true
-      manyToOneCtrl.displayInfo = manyToOneCtrl.hasOwnProperty('displayInfo') ? manyToOneCtrl.displayInfo : true
-      manyToOneCtrl.editable = manyToOneCtrl.hasOwnProperty('editable') ? manyToOneCtrl.editable : true
-      // manyToOneCtrl.showDescripion                = !!manyToOneCtrl.description
-
-      function mirrorAttributes() {
-        const isOneOfPossibles = attribute => possibleAttributes.filter(value => attribute == value).length > 0
-        return Object.keys($attrs.$attr).filter((value) => !isOneOfPossibles(value)).reduce((prev, next) => prev += `${next}="${$attrs[next]}"`, '')
-      }
-
-      manyToOneCtrl.displayInfoButton = displayInfoButton
-      manyToOneCtrl.modelValueIsObject = modelValueIsObject
-      manyToOneCtrl.disabledDisplayInfo = disabledDisplayInfo
-      manyToOneCtrl.displayPlusButton = displayPlusButton
-      manyToOneCtrl.displayClearButton = displayClearButton
-      manyToOneCtrl.clearModel = clearModel
-      manyToOneCtrl.openInfo = openInfo
-      manyToOneCtrl.valueToAdd = ''
-      manyToOneCtrl.afterSelect = afterSelect
-      manyToOneCtrl.proxySearch = (param) => {
-        return manyToOneCtrl.searchMethod({ param }).then(data => {
-          if (data.filter(dataItem => dataItem[manyToOneCtrl.field] == param).length > 0 || !manyToOneCtrl.authorizeAdd) {
-            return data
+          const ERR_MSGS = {
+            noValue: 'É necessário um atributo value no componente gumgaManyToOne',
+            noField: 'É necessário um atributo field no componente gumgaManyToOne',
+            noSearch: 'É necessário uma função de busca no componente gumgaManyToOne'
           }
-          let objToAppend = {}
-          objToAppend[manyToOneCtrl.field] = manyToOneCtrl.valueToAdd
-          return data.concat(objToAppend)
-        })
-      }
-      manyToOneCtrl.proxySave = (val, abc) => {
-        if (!abc) return
-        manyToOneCtrl.isTypeaheadOpen = true;
-        const controllerAs = 'ctrl'
-        const resolve = { value: () => val }
-        controller.$inject = ['$scope', '$uibModalInstance', 'value']
-        function controller($scope, $uibModalInstance, value) {
-          let ctrl = this;
-          ctrl.object = value
-          ctrl.cancel = obj => $uibModalInstance.dismiss('cancel');
-          ctrl.save = obj => $uibModalInstance.close(obj);
-        }
 
-        function mountModalBody() {
-          let fields = manyToOneCtrl.postFields
-          return fields.reduce((prev, next) => {
-            return prev += `
+          const possibleAttributes  = ['loadingText', 'onSelect', 'value', 'list', 'searchMethod', 'field', 'onNewValueAdded', 'onValueSelected', 'onValueVisualizationOpened', 'onValueVisualizationClosed', 'tabindex']
+
+          let template = false
+
+          if(!$attrs.value)        console.error(ERR_MSGS.noValue)
+          if(!$attrs.field)        console.error(ERR_MSGS.noField)
+          if(!$attrs.searchMethod) console.error(ERR_MSGS.noSearch)
+
+          manyToOneCtrl.ev                            = {}
+          manyToOneCtrl.list                          = manyToOneCtrl.list                                                    || []
+          manyToOneCtrl.ev.onNewValueAdded            = $attrs.onNewValueAdded            ? manyToOneCtrl.onNewValueAdded     : angular.noop
+          manyToOneCtrl.ev.onSelect                   = $attrs.onSelect                   ? manyToOneCtrl.onSelect            : angular.noop
+          manyToOneCtrl.ev.onValueVisualizationOpened = $attrs.onValueVisualizationOpened ? $attrs.onValueVisualizationOpened : angular.noop
+          manyToOneCtrl.ev.onValueVisualizationClosed = $attrs.onValueVisualizationClosed ? $attrs.onValueVisualizationClosed : angular.noop
+          manyToOneCtrl.field                         = $attrs.field                                               || ''
+          // manyToOneCtrl.description                   = $attrs.description                                         || false
+          manyToOneCtrl.modalTitle                    = $attrs.modalTitle                                          || 'Visualizador de Registro'
+          manyToOneCtrl.modalFields                   = $attrs.modalFields  ? $attrs.modalFields.split(',')         : [manyToOneCtrl.field]
+          manyToOneCtrl.postFields                    = $attrs.postFields   ? $attrs.postFields.split(',')          : [manyToOneCtrl.field]
+          manyToOneCtrl.displayClear                  = manyToOneCtrl.hasOwnProperty('displayClear') ? manyToOneCtrl.displayClear : true
+          manyToOneCtrl.displayInfo                   = manyToOneCtrl.hasOwnProperty('displayInfo')  ? manyToOneCtrl.displayInfo  : true
+          manyToOneCtrl.editable                      = manyToOneCtrl.hasOwnProperty('editable')     ? manyToOneCtrl.editable     : true
+          // manyToOneCtrl.showDescripion                = !!manyToOneCtrl.description
+
+          function mirrorAttributes(){
+            const isOneOfPossibles = attribute => possibleAttributes.filter(value => attribute == value).length > 0;
+            return Object.keys($attrs.$attr).filter((value) => !isOneOfPossibles(value)).reduce((prev, next) => prev += `${next}="${$attrs[next]}"`, '');
+          }
+
+          manyToOneCtrl.displayInfoButton   = displayInfoButton
+          manyToOneCtrl.modelValueIsObject  = modelValueIsObject
+          manyToOneCtrl.disabledDisplayInfo = disabledDisplayInfo
+          manyToOneCtrl.displayPlusButton   = displayPlusButton
+          manyToOneCtrl.displayClearButton  = displayClearButton
+          manyToOneCtrl.clearModel          = clearModel
+          manyToOneCtrl.openInfo            = openInfo
+          manyToOneCtrl.valueToAdd          = ''
+          manyToOneCtrl.afterSelect         = afterSelect
+          manyToOneCtrl.openTypehead         = openTypehead
+          manyToOneCtrl.showTypeheadAndHideMatch         = showTypeheadAndHideMatch
+
+          manyToOneCtrl.proxySearch         = (param) =>{
+            return manyToOneCtrl.searchMethod({ param }).then(data => {
+              if(data.filter(dataItem => dataItem[manyToOneCtrl.field] == param).length > 0 || !manyToOneCtrl.authorizeAdd){
+                return data
+              }
+              let objToAppend = {}
+              objToAppend[manyToOneCtrl.field] = manyToOneCtrl.valueToAdd;
+
+              return data.concat(objToAppend)
+            })
+          }
+
+          manyToOneCtrl.proxySave  = (val, abc) => {
+            if(!abc) return
+            manyToOneCtrl.isTypeaheadOpen = true;
+            const controllerAs = 'ctrl'
+            const resolve = { value: () => val }
+            controller.$inject = ['$scope','$uibModalInstance', 'value']
+            function controller($scope, $uibModalInstance, value){
+              let ctrl = this;
+              ctrl.object = value
+              ctrl.cancel = obj => $uibModalInstance.dismiss('cancel');
+              ctrl.save   = obj => $uibModalInstance.close(obj);
+            }
+
+            function mountModalBody(){
+              let fields = manyToOneCtrl.postFields
+              return fields.reduce((prev, next) => {
+                return prev += `
                 <div class="form-group">
                   <label>${next}</label>
                   <input type="text" class="form-control" ng-model="ctrl.object.${next}" />
                 </div>`
-          }, ' ')
-        }
+              }, ' ')
+            }
 
-        let template = `
-            <div class="modal-header">
-              <h3 class="modal-title">${manyToOneCtrl.modalTitle}</h3>
-            </div>
-            <div class="modal-body">
-              ${mountModalBody()}
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" ng-click="ctrl.cancel(ctrl.object)">Retornar</button>
-              <button type="button" class="btn btn-primary" ng-click="ctrl.save(ctrl.object)">Salvar</button>
-            </div>`
+            let template = `
+              <div class="modal-header">
+                <h3 class="modal-title">${manyToOneCtrl.modalTitle}</h3>
+              </div>
+              <div class="modal-body">
+                ${mountModalBody()}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="ctrl.cancel(ctrl.object)">Retornar</button>
+                <button type="button" class="btn btn-primary" ng-click="ctrl.save(ctrl.object)">Salvar</button>
+              </div>`
 
 
-        $uibModal
-          .open({ controller, template, controllerAs, resolve })
-          .result
-          .then(
-          value => {
-            manyToOneCtrl.postMethod({ value }).then(
-              dataFromPostMethod => {
-                manyToOneCtrl.value = dataFromPostMethod.data.data
-                ngModelCtrl.$viewValue = dataFromPostMethod.data.data
-              }
-            )
-          },
-          reject => manyToOneCtrl.value = ''
-          )
-      }
+            $uibModal
+              .open({ controller, template, controllerAs, resolve })
+              .result
+              .then(value => {
+                      manyToOneCtrl.postMethod({ value }).then(
+                        dataFromPostMethod => {
+                          manyToOneCtrl.value = dataFromPostMethod.data.data
+                          ngModelCtrl.$viewValue = dataFromPostMethod.data.data
+                        }
+                      )
+                    }, reject => manyToOneCtrl.value = '')
 
-      function displayClearButton() {
-        return manyToOneCtrl.displayClear
-      }
+          }
 
-      function displayInfoButton() {
-        return manyToOneCtrl.displayInfo
-      }
+          function displayClearButton(){
+            return manyToOneCtrl.displayClear
+          }
 
-      function modelValueIsObject() {
-        if (manyToOneCtrl.disabled) return true
-        return !(typeof manyToOneCtrl.value === 'object')
-      }
+          function displayInfoButton(){
+            return manyToOneCtrl.displayInfo
+          }
 
-      function disabledDisplayInfo() {
-        return !(typeof manyToOneCtrl.value === 'object')
-      }
+          function modelValueIsObject(){
+            if (manyToOneCtrl.disabled) return true
+            if (!manyToOneCtrl.value) return true;
+            return !(typeof manyToOneCtrl.value === 'object')
+          }
 
-      function clearModel() {
-        manyToOneCtrl.value = null
-      }
+          function disabledDisplayInfo(){
+            return !(typeof manyToOneCtrl.value === 'object')
+          }
 
-      function displayPlusButton() {
-        return manyToOneCtrl.postMethod
-          && (typeof ngModelCtrl.$$rawModelValue === 'string' || ngModelCtrl.$$rawModelValue instanceof String)
-          && ngModelCtrl.$$rawModelValue.length > 0
-      }
+          function clearModel(){
+            manyToOneCtrl.visible = 'typeahead';
+            delete manyToOneCtrl.value;
+          }
 
-      function afterSelect($item, $model, $label, $event, isBtn) {
-        if (!$model.id) manyToOneCtrl.proxySave($model, isBtn)
-        manyToOneCtrl.ev.onSelect({ value: $model })
-      }
-      function openInfo(object = {}, $event) {
+          function openTypehead(){
+            if(manyToOneCtrl.isTypeaheadOpen) return;
+            document.getElementById('typeahead-' + manyToOneCtrl.field + '-' + $attrs.value).focus();
+          }
 
-        manyToOneCtrl.isTypeaheadOpen = true;
-        $event.stopImmediatePropagation()
-        $event.preventDefault()
-        controller.$inject = ['$scope', '$uibModalInstance']
+          function showTypeheadAndHideMatch(){
+            manyToOneCtrl.visible = 'typeahead'
 
-        function controller($scope, $uibModalInstance) {
-          $scope.close = () => $uibModalInstance.close()
-        }
+            $timeout(()=>{
+              manyToOneCtrl.value = angular.copy(manyToOneCtrl.inputMatchValue);
+              openTypehead();
+              delete manyToOneCtrl.inputMatchValue;
+            })
 
-        function mountModalBody() {
-          let fields = manyToOneCtrl.modalFields
-          return fields.reduce((prev, next) => {
-            return prev += `
+          }
+
+          manyToOneCtrl.isTypeaheadOpen = true;
+
+          function displayPlusButton(){
+            return manyToOneCtrl.postMethod
+                && (typeof ngModelCtrl.$$rawModelValue === 'string' || ngModelCtrl.$$rawModelValue instanceof String)
+                && ngModelCtrl.$$rawModelValue.length > 0
+          }
+
+          function handlingInputVisible(){
+            if(manyToOneCtrl.inputMatch){
+              let span = document.getElementById('match-'+manyToOneCtrl.field+'-'+$attrs.value);
+              let inputMatch = manyToOneCtrl.inputMatch.replace(/{/g, '{{').replace(/}/g, '}}').replace(/item/g, 'manyToOneCtrl.value');
+              let update = '<span style="display: none;" id="match-'+manyToOneCtrl.field+'-'+$attrs.value+'">'+inputMatch+'</span>';
+              angular.element(span).replaceWith($compile(update)($scope))
+              $timeout(() => {
+                let content = document.getElementById('match-'+manyToOneCtrl.field+'-'+$attrs.value);
+                manyToOneCtrl.inputMatchValue = content.innerHTML;
+                manyToOneCtrl.visible = 'inputMatchValue';
+              });
+            }else{
+              manyToOneCtrl.visible = 'typeahead';
+            }
+          }
+
+          function afterSelect($item, $model, $label, $event, isBtn, match){
+            handlingInputVisible();
+            if(!$model.id) manyToOneCtrl.proxySave($model, isBtn);
+            if(manyToOneCtrl.ev.onSelect) manyToOneCtrl.ev.onSelect({value: $model});
+          }
+
+          function openInfo(object = {}, $event) {
+
+            manyToOneCtrl.isTypeaheadOpen = true;
+            $event.stopImmediatePropagation()
+            $event.preventDefault()
+            controller.$inject = ['$scope','$uibModalInstance']
+
+            function controller($scope, $uibModalInstance){
+              $scope.close = () => $uibModalInstance.close()
+            }
+
+            function mountModalBody(){
+              let fields = manyToOneCtrl.modalFields
+              return fields.reduce((prev, next) => {
+                return prev += `
                 <div class="form-group">
                   ${ (typeof object[next] === 'string' || object[next] instanceof String) ? `<label>${next}</label>` : ' '}
                   ${ (typeof object[next] === 'string' || object[next] instanceof String) ? `<input type="text" class="form-control" value="${object[next]}" disabled />` : ' '}
                 </div>`
-          }, ' ')
-        }
+              }, ' ')
+            }
 
-        let template = `
+            let template = `
             <div class="modal-header">
               <h3 class="modal-title">${manyToOneCtrl.modalTitle}</h3>
             </div>
@@ -177,40 +218,52 @@
               ${mountModalBody()}
             </div>
             `
-        $uibModal.open({ controller, template })
+            $uibModal.open({ controller, template })
 
-      }
-
-      $transclude($scope, cloneEl => {
-        angular.forEach(cloneEl, cl => {
-          let element = angular.element(cl)[0];
-          if (element.nodeName && element.nodeName === 'MATCH') {
-            template = true
-            manyToOneCtrl.match = element.innerHTML
           }
-        });
-      })
 
-      /*  */
-      let baseTemplate = `
+          $transclude($scope, cloneEl => {
+            angular.forEach(cloneEl, cl => {
+              let element = angular.element(cl)[0];
+              if (element.nodeName && element.nodeName === 'MATCH') {
+                template = true
+                manyToOneCtrl.match = element.innerHTML
+              }
+            });
+          })
+
+          /*  */
+          let baseTemplate = `
           <div class="full-width-without-padding">
             <div ng-class="{'input-group': (manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()}">
-              <input type="text" class="form-control inputahead" tabindex="${manyToOneCtrl.tabSeq}" ng-disabled="manyToOneCtrl.disabled" ng-readonly="manyToOneCtrl.readonly" ng-model="manyToOneCtrl.value" ng-trim="true" uib-typeahead="$value as $value[manyToOneCtrl.field] for $value in manyToOneCtrl.proxySearch($viewValue)" ${mirrorAttributes()}
-                     typeahead-template-url="manyToOneTemplate${manyToOneCtrl.field}.html" typeahead-is-open="manyToOneCtrl.isTypeaheadOpen" typeahead-editable="${manyToOneCtrl.editable}" typeahead-show-hint="true" typeahead-min-length="0" typeahead-on-select="manyToOneCtrl.afterSelect($item, $model, $label, $event, 'isNotButton')" autocomplete="off"/>
+              <input type="text" ng-init="manyToOneCtrl.visible = 'typeahead'" ng-show="manyToOneCtrl.visible == 'typeahead'" id="typeahead-${manyToOneCtrl.field}-${$attrs.value}" class="form-control inputahead" tabindex="${manyToOneCtrl.tabSeq}" ng-disabled="manyToOneCtrl.disabled" ng-readonly="manyToOneCtrl.readonly" ng-model="manyToOneCtrl.value" ng-trim="true" uib-typeahead="$value as $value[manyToOneCtrl.field] for $value in manyToOneCtrl.proxySearch($viewValue)" typeahead-loading="manyToOneCtrl.typeaheadLoading" ${mirrorAttributes()}
+                     typeahead-template-url="manyToOneTemplate${manyToOneCtrl.field}-${$attrs.value}.html" typeahead-is-open="manyToOneCtrl.isTypeaheadOpen" typeahead-editable="${manyToOneCtrl.editable}" typeahead-show-hint="true" typeahead-min-length="0" typeahead-on-select="manyToOneCtrl.afterSelect($item, $model, $label, $event, 'isNotButton', manyToOneCtrl.match)" autocomplete="off"/>
+              <input type="text" ng-keyup="manyToOneCtrl.showTypeheadAndHideMatch()" ng-model="manyToOneCtrl.inputMatchValue" class="form-control" ng-show="manyToOneCtrl.visible == 'inputMatchValue'"/>
+              <div ng-show="manyToOneCtrl.typeaheadLoading && manyToOneCtrl.loadingText" style="position: absolute; top: 40px;">
+                <i class="glyphicon glyphicon-refresh"></i>
+                {{manyToOneCtrl.loadingText}}
+              </div>
+              <span ng-hide="true" id="match-${manyToOneCtrl.field}-${$attrs.value}"></span>
               <div class="input-group-btn input-group-btn-icon" ng-show="(manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()">
-                <button type="button" class="btn btn-default" ng-disabled="manyToOneCtrl.modelValueIsObject()" ng-show="manyToOneCtrl.displayClearButton()" ng-click="manyToOneCtrl.clearModel()">
+                <button type="button" class="btn btn-default" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton()" ng-click="manyToOneCtrl.clearModel()">
                   <span class="glyphicon glyphicon-remove"></span>
                 </button>
-                <button type="button" class="btn btn-default" ng-show="manyToOneCtrl.displayInfoButton()" ng-disabled="manyToOneCtrl.disabledDisplayInfo()" ng-click="manyToOneCtrl.openInfo(manyToOneCtrl.value, $event)">
+                <button type="button" class="btn btn-default"
+                        ng-show="manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton()"
+                        ng-click="manyToOneCtrl.openTypehead()">
+                  <span class="{{!manyToOneCtrl.isTypeaheadOpen ? 'glyphicon glyphicon-chevron-down' : 'glyphicon glyphicon-chevron-up'}}"></span>
+                </button>
+                <button type="button" class="btn btn-default" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayInfoButton()" ng-disabled="manyToOneCtrl.disabledDisplayInfo()" ng-click="manyToOneCtrl.openInfo(manyToOneCtrl.value, $event)">
                   <span class="glyphicon glyphicon-info-sign"></span>
                 </button>
               </div>
             </div>
+
           </div>`
 
 
-      let templateForInnerMatch = (!template) ? `<span ng-bind-html="match.model.${manyToOneCtrl.field} | uibTypeaheadHighlight:query"></span>` : `<span>${manyToOneCtrl.match}</span>`
-      let templateForMatch = `
+          let templateForInnerMatch = (!template) ? `<span ng-bind-html="match.model.${manyToOneCtrl.field} | uibTypeaheadHighlight:query"></span>` : `<span>${manyToOneCtrl.match}</span>`
+          let templateForMatch = `
           <a class="col-md-12 result">
             <span class="col-md-10 str" ng-click="manyToOneCtrl.select()">
               ${templateForInnerMatch}
@@ -224,54 +277,60 @@
             <div class="clearfix"></div>
           </a>`
 
-      $templateCache.put(`manyToOneTemplate${manyToOneCtrl.field}.html`, templateForMatch)
+          $templateCache.put(`manyToOneTemplate${manyToOneCtrl.field}-${$attrs.value}.html`, templateForMatch)
 
-      let element = angular.element(baseTemplate),
-        input = element.find('input'),
-        form = $element.parent()
-      while (form[0].nodeName != 'FORM') form = form.parent();
-      let formController = $scope.$parent[form.attr('name')]
+          let element = angular.element(baseTemplate),
+              input   = element.find('input'),
+              form    = $element.parent()
+          while(form[0].nodeName != 'FORM') form = form.parent();
+          let formController = $scope.$parent[form.attr('name')]
 
-      $element.append($compile(element)($scope))
+          $element.append($compile(element)($scope))
 
-      ngModelCtrl = input.controller('ngModel')
-      ngModelCtrlReset = angular.copy(ngModelCtrl)
+          ngModelCtrl       = input.controller('ngModel')
+          ngModelCtrlReset  = angular.copy(ngModelCtrl)
 
-      formController.$addControl(ngModelCtrl)
+          formController.$addControl(ngModelCtrl)
 
-      ngModelCtrl.$viewChangeListeners.push(() => {
-        // console.log('$viewChangeListeners', ngModelCtrl.$viewValue)
-      })
-      ngModelCtrl.$validators.manyToOne = (modelValue, viewValue) => {
-        return modelValue ? !(typeof modelValue === 'string' || modelValue instanceof String) : true
-      }
+          ngModelCtrl.$viewChangeListeners.push(() => {
+            // console.log('$viewChangeListeners', ngModelCtrl.$viewValue)
+          })
+          ngModelCtrl.$validators.manyToOne = (modelValue, viewValue) => {
+            return modelValue ? !(typeof modelValue === 'string' || modelValue instanceof String) : true
+          }
 
-      $scope.$watch(() => ngModelCtrl.$$rawModelValue, (i) => (manyToOneCtrl.valueToAdd = ngModelCtrl.$$rawModelValue))
+          if(!modelValueIsObject()){
+             handlingInputVisible();
+          }
+
+          $scope.$watch(() => ngModelCtrl.$$rawModelValue, (i) => (manyToOneCtrl.valueToAdd = ngModelCtrl.$$rawModelValue))
+        }
+
+        return {
+            restrict : 'E',
+            replace: true,
+            transclude: true,
+            scope : {
+              value:            '=',
+              loadingText:      '@?',
+              inputMatch:       '@?',
+              searchMethod:     '&',
+              postMethod:       '&?',
+              onSelect:         '&?',
+              list:             '=?',
+              authorizeAdd:     '=?',
+              disabled:         '=?',
+              readonly:         '=?',
+              displayInfo:      '=?',
+              displayClear:     '=?',
+              editable:         '=?',
+              tabSeq:           '=?'
+            },
+            controllerAs: 'manyToOneCtrl',
+            bindToController: true,
+            controller
+        }
     }
-
-    return {
-      restrict: 'E',
-      replace: true,
-      transclude: true,
-      scope: {
-        value: '=',
-        searchMethod: '&',
-        postMethod: '&?',
-        onSelect: '&?',
-        list: '=?',
-        authorizeAdd: '=?',
-        disabled: '=?',
-        readonly: '=?',
-        displayInfo: '=?',
-        displayClear: '=?',
-        editable: '=?',
-        tabSeq: '=?'
-      },
-      controllerAs: 'manyToOneCtrl',
-      bindToController: true,
-      controller
-    }
-  }
-  angular.module('gumga.manytoone', ['ui.bootstrap'])
-    .directive('gumgaManyToOne', ManyToOne);
+    angular.module('gumga.manytoone', ['ui.bootstrap'])
+      .directive('gumgaManyToOne', ManyToOne);
 })();
