@@ -234,6 +234,12 @@
 
           /*  */
           let baseTemplate = `
+          <style>
+            gumga-many-to-one .dropdown-menu{
+              width: 100%;
+            }
+          </style>
+
           <div class="full-width-without-padding">
             <div ng-class="{'input-group': (manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()}">
               <input type="text" ng-init="manyToOneCtrl.visible = 'typeahead'" ng-show="manyToOneCtrl.visible == 'typeahead'" id="typeahead-${manyToOneCtrl.field}-${$attrs.value}" class="form-control inputahead" tabindex="${manyToOneCtrl.tabSeq}" ng-disabled="manyToOneCtrl.disabled" ng-readonly="manyToOneCtrl.readonly" ng-model="manyToOneCtrl.value" ng-trim="true" uib-typeahead="$value as $value[manyToOneCtrl.field] for $value in manyToOneCtrl.proxySearch($viewValue)" typeahead-loading="manyToOneCtrl.typeaheadLoading" ${mirrorAttributes()}
