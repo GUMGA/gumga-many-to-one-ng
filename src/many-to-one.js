@@ -21,7 +21,7 @@
 
           if(!$attrs.value)        console.error(ERR_MSGS.noValue)
           if(!$attrs.field)        console.error(ERR_MSGS.noField)
-          if(!$attrs.searchMethod) console.error(ERR_MSGS.noSearch)
+          // if(!$attrs.searchMethod) console.error(ERR_MSGS.noSearch)
 
           manyToOneCtrl.ev                            = {}
           manyToOneCtrl.list                          = manyToOneCtrl.list                                                    || []
@@ -37,6 +37,7 @@
           manyToOneCtrl.displayClear                  = manyToOneCtrl.hasOwnProperty('displayClear') ? manyToOneCtrl.displayClear : true
           manyToOneCtrl.displayInfo                   = manyToOneCtrl.hasOwnProperty('displayInfo')  ? manyToOneCtrl.displayInfo  : true
           manyToOneCtrl.editable                      = manyToOneCtrl.hasOwnProperty('editable')     ? manyToOneCtrl.editable     : true
+          manyToOneCtrl.async                         = manyToOneCtrl.hasOwnProperty('async')        ? manyToOneCtrl.async        : true
           // manyToOneCtrl.showDescripion                = !!manyToOneCtrl.description
 
           function mirrorAttributes(){
@@ -56,16 +57,21 @@
           manyToOneCtrl.openTypehead         = openTypehead
           manyToOneCtrl.showTypeheadAndHideMatch         = showTypeheadAndHideMatch
 
-          manyToOneCtrl.proxySearch         = (param) =>{
-            return manyToOneCtrl.searchMethod({ param }).then(data => {
-              if(data.filter(dataItem => dataItem[manyToOneCtrl.field] == param).length > 0 || !manyToOneCtrl.authorizeAdd){
-                return data
-              }
-              let objToAppend = {}
-              objToAppend[manyToOneCtrl.field] = manyToOneCtrl.valueToAdd;
+          manyToOneCtrl.proxySearch = (param) => {
+            if (!manyToOneCtrl.async) {
+              if (param) param = param.toLowerCase()
+              return manyToOneCtrl.list.filter(listItem => listItem[manyToOneCtrl.field].toLowerCase().indexOf(param) > -1)
+            } else {
+              return manyToOneCtrl.searchMethod({ param }).then(data => {
+                if(data.filter(dataItem => dataItem[manyToOneCtrl.field] == param).length > -1 || !manyToOneCtrl.authorizeAdd){
+                  return data
+                }
+                let objToAppend = {}
+                objToAppend[manyToOneCtrl.field] = manyToOneCtrl.valueToAdd;
 
-              return data.concat(objToAppend)
-            })
+                return data.concat(objToAppend)
+              })
+            }
           }
 
           manyToOneCtrl.proxySave  = (val, abc) => {
@@ -234,9 +240,9 @@
 
           /*  */
           let baseTemplate = `
-          <div class="full-width-without-padding">
+          <div>
             <div ng-class="{'input-group': (manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()}">
-              <input type="text" ng-init="manyToOneCtrl.visible = 'typeahead'" ng-show="manyToOneCtrl.visible == 'typeahead'" id="typeahead-${manyToOneCtrl.field}-${$attrs.value}" class="form-control inputahead" tabindex="${manyToOneCtrl.tabSeq}" ng-disabled="manyToOneCtrl.disabled" ng-readonly="manyToOneCtrl.readonly" ng-model="manyToOneCtrl.value" ng-trim="true" uib-typeahead="$value as $value[manyToOneCtrl.field] for $value in manyToOneCtrl.proxySearch($viewValue)" typeahead-loading="manyToOneCtrl.typeaheadLoading" ${mirrorAttributes()}
+              <input type="text" ng-init="manyToOneCtrl.visible = 'typeahead'" ng-show="manyToOneCtrl.visible == 'typeahead'" id="typeahead-${manyToOneCtrl.field}-${$attrs.value}" class="form-control gmd inputahead" tabindex="${manyToOneCtrl.tabSeq}" ng-disabled="manyToOneCtrl.disabled" ng-readonly="manyToOneCtrl.readonly" ng-model="manyToOneCtrl.value" ng-trim="true" uib-typeahead="$value as $value[manyToOneCtrl.field] for $value in manyToOneCtrl.proxySearch($viewValue)" typeahead-loading="manyToOneCtrl.typeaheadLoading" ${mirrorAttributes()}
                      typeahead-template-url="manyToOneTemplate${manyToOneCtrl.field}-${$attrs.value}.html" typeahead-is-open="manyToOneCtrl.isTypeaheadOpen" typeahead-editable="${manyToOneCtrl.editable}" typeahead-show-hint="true" typeahead-min-length="0" typeahead-on-select="manyToOneCtrl.afterSelect($item, $model, $label, $event, 'isNotButton', manyToOneCtrl.match)" autocomplete="off"/>
               <input type="text" ng-keyup="manyToOneCtrl.showTypeheadAndHideMatch()" ng-model="manyToOneCtrl.inputMatchValue" class="form-control" ng-show="manyToOneCtrl.visible == 'inputMatchValue'"/>
               <div ng-show="manyToOneCtrl.typeaheadLoading && manyToOneCtrl.loadingText" style="position: absolute; top: 40px;">
@@ -245,15 +251,15 @@
               </div>
               <span ng-hide="true" id="match-${manyToOneCtrl.field}-${$attrs.value}"></span>
               <div class="input-group-btn input-group-btn-icon" ng-show="(manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()">
-                <button type="button" class="btn btn-default" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton()" ng-click="manyToOneCtrl.clearModel()">
+                <button type="button" class="btn btn-default gmd" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton()" ng-click="manyToOneCtrl.clearModel()">
                   <span class="glyphicon glyphicon-remove"></span>
                 </button>
-                <button type="button" class="btn btn-default"
+                <button type="button" class="btn btn-default gmd"
                         ng-show="manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton()"
                         ng-click="manyToOneCtrl.openTypehead()">
                   <span class="{{!manyToOneCtrl.isTypeaheadOpen ? 'glyphicon glyphicon-chevron-down' : 'glyphicon glyphicon-chevron-up'}}"></span>
                 </button>
-                <button type="button" class="btn btn-default" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayInfoButton()" ng-disabled="manyToOneCtrl.disabledDisplayInfo()" ng-click="manyToOneCtrl.openInfo(manyToOneCtrl.value, $event)">
+                <button type="button" class="btn btn-default gmd" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayInfoButton()" ng-disabled="manyToOneCtrl.disabledDisplayInfo()" ng-click="manyToOneCtrl.openInfo(manyToOneCtrl.value, $event)">
                   <span class="glyphicon glyphicon-info-sign"></span>
                 </button>
               </div>
@@ -264,7 +270,7 @@
 
           let templateForInnerMatch = (!template) ? `<span ng-bind-html="match.model.${manyToOneCtrl.field} | uibTypeaheadHighlight:query"></span>` : `<span>${manyToOneCtrl.match}</span>`
           let templateForMatch = `
-          <a class="col-md-12 result">
+          <a class="col-md-12 result gmd">
             <span class="col-md-10 str" ng-click="manyToOneCtrl.select()">
               ${templateForInnerMatch}
               <span ng-show="$parent.$parent.$parent.$parent.manyToOneCtrl.valueToAdd == match.label && $parent.$parent.$parent.$parent.manyToOneCtrl.valueToAdd.length > 0 && !match.model.id && !!$parent.$parent.$parent.$parent.manyToOneCtrl.authorizeAdd">(novo)</span><br>
@@ -324,7 +330,8 @@
               displayInfo:      '=?',
               displayClear:     '=?',
               editable:         '=?',
-              tabSeq:           '=?'
+              tabSeq:           '=?',
+              async:            '=?'
             },
             controllerAs: 'manyToOneCtrl',
             bindToController: true,
