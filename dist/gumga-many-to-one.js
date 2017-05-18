@@ -79,6 +79,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             return listItem[manyToOneCtrl.field].toLowerCase().indexOf(param) > -1;
           });
         } else {
+          param = param || '';
           return manyToOneCtrl.searchMethod({ param: param }).then(function (data) {
             if (data.filter(function (dataItem) {
               return dataItem[manyToOneCtrl.field] == param;

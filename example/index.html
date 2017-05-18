@@ -7,10 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
     crossorigin="anonymous">
-  <!--<link rel="stylesheet" href="https://gumga.github.io/layout/dist/gumga-layout.min.css">-->
+    <!--<link rel="stylesheet" href="https://gumga.github.io/layout/dist/gumga-layout.min.css">-->
     <link rel="stylesheet" href="http://localhost:9999/dist/gumga-layout.css" />
     <style>
-    /*gumga-many-to-one.gmd .dropdown-menu {
+      /*gumga-many-to-one.gmd .dropdown-menu {
       padding: 0;
       border-width: 0 1 1;
       border-color: #fff;
@@ -38,7 +38,7 @@
       <li>Gumga Rest</li>
       <li>Gumga Controller</li>
     </ul>
-  <pre>
+    <pre>
   npm install gumga-rest-ng
   npm install gumga-controller-ng
   // ou
@@ -48,37 +48,60 @@
     <div class="row">
       <form name="Example">
         <div class="col-md-6">
-          <gumga-many-to-one class="gmd" value="pessoa" search-method="pessoas.methods.asyncSearch('nome', param)" editable="false" field="nome"
-            authorize-add="false" async="true" display-info="false">
+          <!--<gumga-many-to-one class="gmd" value="pessoa" search-method="pessoas.methods.asyncSearch('nome', param)" editable="false"
+            field="nome" authorize-add="false" async="true" display-info="false">
             <match>
               <div>{{match.model.nome}}</div>
             </match>
-            </gumga-many-to-one>
+            </gumga-many-to-one>-->
             <br>
             <label>Selecionado</label>
             <!--<pre>{{pessoa | json}}</pre>-->
         </div>
         <div class="col-md-6">
           <gumga-many-to-one
-            value="pessoaB"
-            name="produto"
-            disabled="false"
-            search-method="pessoas.methods.asyncSearch('nome', param)"
-            editable="false"
-            input-match="{ item.dataNascimento } - { item.nomeFonetico }"
+            value="historico.historico"
+            search-method="historico.methods.asyncSearch('historico', param)"
+            authorize-add="true"
+            field="historico"
+            post-method="historico.methods.post(value)"
+            async="true"
+            display-info="true">
+              <match>
+                  <div>{{match.model.historico}}</div>
+              </match>
+          </gumga-many-to-one>
+          <!--<gumga-many-to-one
+            class="gmd"
+            value="produto.data.categoria"
+            search-method="historico.methods.asyncSearch('historico', param)"
+            authorize-add="true"
             field="nome"
-            authorize-add="false" async="true" display-info="false">
-            <match>
-              <div>{{match.model.id}} - {{match.model.nomeFonetico}}</div>
-            </match>
-            </gumga-many-to-one>
-            <br>
-            <label>Selecionado</label>
-            <!--<pre>{{produto | json}}</pre>-->
+            post-method="historico.methods.post(value)"
+            async="true"
+            display-info="true">
+              <match>
+                  <div>{{match.model.historico}}</div>
+              </match>
+          </gumga-many-to-one>-->
+
+          <br>
+          <label>Selecionado</label>
+          <!--<pre>{{produto | json}}</pre>-->
         </div>
         <div class="col-md-6">
           <h3></h3>
-          <gumga-many-to-one
+          <!--<gumga-many-to-one value="pessoaB" name="produto" disabled="false"
+          search-method="advancedSearch(param)" editable="false" input-match="{ item.dataNascimento } - { item.nomeFonetico }"
+            field="nome" authorize-add="false" async="true" display-info="false">
+            <match>
+              <div>{{match.model.id}} - {{match.model.nomeFonetico}}</div>
+            </match>
+            </gumga-many-to-one>-->
+            <br>
+            <label>Selecionado</label>
+
+            <!--<gumga-many-to-one
             value="produtoB"
             list="produtos"
             field="nome"
@@ -91,7 +114,7 @@
           </gumga-many-to-one>
             <br>
             <label>Selecionado</label>
-            <pre>{{pessoa | json}}</pre>
+            <pre>{{pessoa | json}}</pre>-->
         </div>
       </form>
     </div>
@@ -109,39 +132,58 @@
   <script>
     angular.module('yourApp', ['gumga.rest', 'gumga.controller', 'gumga.manytoone'])
       .config(function ($httpProvider) {
-        $httpProvider.defaults.headers.common['gumgaToken'] = 'batistakids'
+        $httpProvider.defaults.headers.common['gumgaToken'] = 'homologacaokids'
       })
       .controller('manyToOneCtrl', ['gumgaController', 'GumgaRest', '$scope', '$http', '$q',
         function (gumgaController, GumgaRest, $scope, $http, $q) {
 
-        $scope.getSearch = function(param){
-            return $q(function(resolve){
-                var arr = $scope.produtos.filter(function(produto){
-                  console.log(produto.nome.indexOf(param))
-                  return produto.nome.indexOf(param) != -1;
-                })
-                resolve(arr);
-            })
-        }
+          var HistoricoService = new GumgaRest('http://192.168.25.250/gileadeweb-api/api/historico');
+          gumgaController.createRestMethods($scope, HistoricoService, 'historico');
 
-        $scope.produtos = [
-          {
-            nome: 'Notebook Acer Aspire',
-            id: 1
-          },
-          {
-            nome: 'Motorola Moto X (2a Geração) 32GB',
-            id: 2
-          },
-          {
-            nome: 'Smart TV LED 43" Samsung',
-            id: 3
-          },
-          {
-            nome: 'Ar Condicionado Split 7000 BTU/s',
-            id: 4
+
+          var PessoaService = new GumgaRest('http://192.168.25.250/gileadeweb-api/api/pessoacadastro');
+          gumgaController.createRestMethods($scope, PessoaService, 'pessoas');
+          // $scope.pessoas.methods.get();
+
+          $scope.advancedSearch = function(param) {
+            // param = param || ''
+            return PessoaService.getAdvancedSearch('lower(nome) like lower(\'%' + param + '%\')')
+            .then(function(response) {
+              return response.data.values
+            })
           }
-        ];
+          $scope.asyncSearch = function (param) {
+            console.log(param)
+            $scope.pessoas.methods.asyncSearch('nome', param)
+          }
+          $scope.getSearch = function (param) {
+            return $q(function (resolve) {
+              var arr = $scope.produtos.filter(function (produto) {
+                console.log(produto.nome.indexOf(param))
+                return produto.nome.indexOf(param) != -1;
+              })
+              resolve(arr);
+            })
+          }
+
+          $scope.produtos = [
+            {
+              nome: 'Notebook Acer Aspire',
+              id: 1
+            },
+            {
+              nome: 'Motorola Moto X (2a Geração) 32GB',
+              id: 2
+            },
+            {
+              nome: 'Smart TV LED 43" Samsung',
+              id: 3
+            },
+            {
+              nome: 'Ar Condicionado Split 7000 BTU/s',
+              id: 4
+            }
+          ];
 
           // $scope.produto = {
           //   "id": 1,
@@ -203,9 +245,6 @@
           //   "sexo": "NAO_INFORMADO",
           //   "type": "PessoaCadastro"
           // };
-          var PessoaService = new GumgaRest('http://192.168.25.250/gileadeweb-api/api/pessoacadastro');
-          gumgaController.createRestMethods($scope, PessoaService, 'pessoas');
-          $scope.pessoas.methods.get();
         }
       ])
   </script>
