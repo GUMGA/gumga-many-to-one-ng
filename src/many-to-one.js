@@ -62,6 +62,7 @@
               if (param) param = param.toLowerCase()
               return manyToOneCtrl.list.filter(listItem => listItem[manyToOneCtrl.field].toLowerCase().indexOf(param) > -1)
             } else {
+              param = param || ''
               return manyToOneCtrl.searchMethod({ param }).then(data => {
                 if(data.filter(dataItem => dataItem[manyToOneCtrl.field] == param).length > -1 || !manyToOneCtrl.authorizeAdd){
                   return data
