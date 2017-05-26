@@ -60,16 +60,16 @@
         </div>
         <div class="col-md-6">
           <gumga-many-to-one
-            value="historico.historico"
+            value="pessoa"
             search-method="historico.methods.asyncSearch('historico', param)"
             authorize-add="true"
             field="historico"
             post-method="historico.methods.post(value)"
             async="true"
             display-info="true">
-              <match>
+              <!--<match>
                   <div>{{match.model.historico}}</div>
-              </match>
+              </match>-->
           </gumga-many-to-one>
           <!--<gumga-many-to-one
             class="gmd"
