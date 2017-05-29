@@ -64,7 +64,7 @@
             } else {
               param = param || ''
               return manyToOneCtrl.searchMethod({ param }).then(data => {
-                if(data.filter(dataItem => dataItem[manyToOneCtrl.field] == param).length > -1 || !manyToOneCtrl.authorizeAdd){
+                if(data.filter(dataItem => dataItem[manyToOneCtrl.field] == param).length > 0 || !manyToOneCtrl.authorizeAdd){
                   return data
                 }
                 let objToAppend = {}

@@ -59,35 +59,22 @@
             <!--<pre>{{pessoa | json}}</pre>-->
         </div>
         <div class="col-md-6">
+          <pre>{{data}}</pre>
           <gumga-many-to-one
-            value="historico.historico"
-            search-method="historico.methods.asyncSearch('historico', param)"
+            value="data"
+            tab-seq="2"
+            search-method="notificacao.methods.asyncSearch('mensagem', param)"
             authorize-add="true"
-            field="historico"
-            post-method="historico.methods.post(value)"
+            field="mensagem"
+            post-method="notificacao.methods.asyncPost(value)"
             async="true"
             display-info="true">
-              <match>
+              <!--<match>
                   <div>{{match.model.historico}}</div>
-              </match>
+              </match>-->
           </gumga-many-to-one>
-          <!--<gumga-many-to-one
-            class="gmd"
-            value="produto.data.categoria"
-            search-method="historico.methods.asyncSearch('historico', param)"
-            authorize-add="true"
-            field="nome"
-            post-method="historico.methods.post(value)"
-            async="true"
-            display-info="true">
-              <match>
-                  <div>{{match.model.historico}}</div>
-              </match>
-          </gumga-many-to-one>-->
-
           <br>
           <label>Selecionado</label>
-          <!--<pre>{{produto | json}}</pre>-->
         </div>
         <div class="col-md-6">
           <h3></h3>
@@ -140,11 +127,17 @@
           var HistoricoService = new GumgaRest('http://192.168.25.250/gileadeweb-api/api/historico');
           gumgaController.createRestMethods($scope, HistoricoService, 'historico');
 
+          var NotificacaoService = new GumgaRest('http://192.168.25.250/gileadeweb-api/api/notificacao');
+          gumgaController.createRestMethods($scope, NotificacaoService, 'notificacao');
 
           var PessoaService = new GumgaRest('http://192.168.25.250/gileadeweb-api/api/pessoacadastro');
           gumgaController.createRestMethods($scope, PessoaService, 'pessoas');
           // $scope.pessoas.methods.get();
 
+          var saveModal = function(value) {
+            console.log('value: ', value)
+            return $scope.historico.methods.asyncPost(value)
+          }
           $scope.advancedSearch = function(param) {
             // param = param || ''
             return PessoaService.getAdvancedSearch('lower(nome) like lower(\'%' + param + '%\')')
