@@ -33,12 +33,27 @@
     "unminified-webpack-plugin": "^1.1.1",
     "webpack": "^2.6.0",
     "webpack-dev-server": "^1.16.2",
-    "webpack-stream": "^3.2.0"
+    "webpack-stream": "^3.2.0",
+    "istanbul-instrumenter-loader": "^2.0.0",
+    "karma": "^1.7.0",
+    "karma-babel-preprocessor": "^6.0.1",
+    "karma-chrome-launcher": "^2.1.1",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-jshint-preprocessor": "0.0.6",
+    "karma-mocha": "^1.3.0",
+    "karma-mocha-reporter": "^2.2.3",
+    "chai": "^4.0.2",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-spec-reporter": "0.0.31",
+    "karma-webpack": "^2.0.3",
+    "mocha": "^3.4.2"
   },
   "scripts": {
     "dev": "webpack-dev-server --config ./webpack.dev.config.js",
     "prod": "NODE_ENV=production webpack --config ./webpack.production.config.js && webpack --config ./webpack.production.bundle.config",
-    "doc": "node ./docs/create-doc.js"
+    "doc": "node ./docs/create-doc.js",
+    "test": "karma start ./webpack.karma.config.js"
   },
   "keywords": [
     "gumga",

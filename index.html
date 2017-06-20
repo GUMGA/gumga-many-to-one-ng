@@ -49,36 +49,6 @@
     <div class="row">
       <form name="Example">
         <div class="col-md-6">
-          <!--<gumga-many-to-one class="gmd" value="pessoa" search-method="pessoas.methods.asyncSearch('nome', param)" editable="false"
-            field="nome" authorize-add="false" async="true" display-info="false">
-            <match>
-              <div>{{match.model.nome}}</div>
-            </match>
-            </gumga-many-to-one>-->
-            <br>
-            <label>Selecionado</label>
-            <!--<pre>{{pessoa | json}}</pre>-->
-        </div>
-        <div class="col-md-6">
-          <pre>{{data}}</pre>
-          <gumga-many-to-one
-            value="data"
-            tab-seq="2"
-            search-method="notificacao.methods.asyncSearch('mensagem', param)"
-            authorize-add="true"
-            field="mensagem"
-            post-method="notificacao.methods.asyncPost(value)"
-            display-info="true">
-              <!--<match>
-                  <div>{{match.model.historico}}</div>
-              </match>-->
-          </gumga-many-to-one>
-          <br>
-          <label>Selecionado</label>
-        </div>
-        <div class="col-md-6">
-          <h3></h3>
-
           <gumga-many-to-one
             value="produtoB"
             list="produtos"
@@ -94,7 +64,23 @@
           <br>
           <label>Selecionado</label>
           <pre>{{produtoB | json}}</pre>
-
+        </div>
+        <div class="col-md-6">
+          <gumga-many-to-one
+            value="data"
+            tab-seq="2"
+            search-method="notificacao.methods.asyncSearch('mensagem', param)"
+            authorize-add="true"
+            field="mensagem"
+            post-method="notificacao.methods.asyncPost(value)"
+            display-info="true">
+              <!--<match>
+                  <div>{{match.model.historico}}</div>
+              </match>-->
+          </gumga-many-to-one>
+          <br>
+          <label>Selecionado</label>
+          <pre>{{data | json}}</pre>
         </div>
       </form>
     </div>
@@ -112,7 +98,7 @@
   <script>
     angular.module('yourApp', ['gumga.rest', 'gumga.controller', 'gumga.manytoone'])
       .config(function ($httpProvider) {
-        $httpProvider.defaults.headers.common['gumgaToken'] = 'batistakids'
+        $httpProvider.defaults.headers.common['gumgaToken'] = 'homologacaokids'
       })
       .controller('manyToOneCtrl', ['gumgaController', 'GumgaRest', '$scope', '$http', '$q',
         function (gumgaController, GumgaRest, $scope, $http, $q) {
@@ -128,12 +114,12 @@
           // $scope.pessoas.methods.get();
 
           var saveModal = function(value) {
-            console.log('value: ', value)
             return $scope.historico.methods.asyncPost(value)
           }
+
           $scope.advancedSearch = function(param) {
             // param = param || ''
-            return PessoaService.getAdvancedSearch('lower(nome) like lower(\'%' + param + '%\')')
+            return HistoricoService.getAdvancedSearch('lower(historico) like lower(\'%' + param + '%\')')
             .then(function(response) {
               return response.data.values
             })
