@@ -124,7 +124,9 @@
                           ngModelCtrl.$viewValue = dataFromPostMethod.data.data
                         }
                       )
-                    }, reject => manyToOneCtrl.value = '')
+                    }, reject => {
+                      delete manyToOneCtrl.value;
+                    })
 
           }
 
@@ -314,7 +316,14 @@
              handlingInputVisible();
           }
 
-          $scope.$watch(() => ngModelCtrl.$$rawModelValue, (i) => (manyToOneCtrl.valueToAdd = ngModelCtrl.$$rawModelValue))
+          $scope.$watch(() => ngModelCtrl.$$rawModelValue, (i) => {
+            if(ngModelCtrl.$$rawModelValue == '') {
+              delete ngModelCtrl.$$rawModelValue;
+              delete manyToOneCtrl.value;
+            }else{
+              manyToOneCtrl.valueToAdd = ngModelCtrl.$$rawModelValue;
+            }
+          })
         }
 
         return {

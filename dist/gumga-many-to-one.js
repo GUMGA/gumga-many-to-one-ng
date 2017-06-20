@@ -200,7 +200,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             ngModelCtrl.$viewValue = dataFromPostMethod.data.data;
           });
         }, function (reject) {
-          return manyToOneCtrl.value = '';
+          delete manyToOneCtrl.value;
         });
       };
 
@@ -345,7 +345,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       $scope.$watch(function () {
         return ngModelCtrl.$$rawModelValue;
       }, function (i) {
-        return manyToOneCtrl.valueToAdd = ngModelCtrl.$$rawModelValue;
+        if (ngModelCtrl.$$rawModelValue == '') {
+          delete ngModelCtrl.$$rawModelValue;
+          delete manyToOneCtrl.value;
+        } else {
+          manyToOneCtrl.valueToAdd = ngModelCtrl.$$rawModelValue;
+        }
       });
     }
 
