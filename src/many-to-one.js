@@ -60,7 +60,9 @@
           manyToOneCtrl.proxySearch = (param) => {
             if (!manyToOneCtrl.async) {
               if (param) param = param.toLowerCase()
-              return manyToOneCtrl.list.filter(listItem => listItem[manyToOneCtrl.field].toLowerCase().indexOf(param) > -1)
+              return manyToOneCtrl.list.filter(listItem => {
+                return listItem[manyToOneCtrl.field].toLowerCase().indexOf(param) != -1;
+              })
             } else {
               param = param || ''
               return manyToOneCtrl.searchMethod({ param }).then(data => {
@@ -191,7 +193,9 @@
 
           function afterSelect($item, $model, $label, $event, isBtn, match){
             handlingInputVisible();
-            if(!$model.id) manyToOneCtrl.proxySave($model, isBtn);
+            if(!$model.id && manyToOneCtrl.authorizeAdd) {
+              manyToOneCtrl.proxySave($model, isBtn);
+            }
             if(manyToOneCtrl.ev.onSelect) manyToOneCtrl.ev.onSelect({value: $model});
           }
 
