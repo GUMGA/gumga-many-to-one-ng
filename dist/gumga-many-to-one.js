@@ -144,14 +144,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       manyToOneCtrl.openTypehead = openTypehead;
       manyToOneCtrl.showTypeheadAndHideMatch = showTypeheadAndHideMatch;
 
-      manyToOneCtrl.proxySearch = function (param) {
+      manyToOneCtrl.proxySearch = function () {
+        var param = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
         if (!manyToOneCtrl.async) {
           if (param) param = param.toLowerCase();
           return manyToOneCtrl.list.filter(function (listItem) {
             return listItem[manyToOneCtrl.field].toLowerCase().indexOf(param) != -1;
           });
         } else {
-          param = param || '';
           return manyToOneCtrl.searchMethod({ param: param }).then(function (data) {
             if (data.filter(function (dataItem) {
               return dataItem[manyToOneCtrl.field] == param;

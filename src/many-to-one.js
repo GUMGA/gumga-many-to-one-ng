@@ -57,14 +57,13 @@
           manyToOneCtrl.openTypehead         = openTypehead
           manyToOneCtrl.showTypeheadAndHideMatch         = showTypeheadAndHideMatch
 
-          manyToOneCtrl.proxySearch = (param) => {
+          manyToOneCtrl.proxySearch = (param = '') => {
             if (!manyToOneCtrl.async) {
-              if (param) param = param.toLowerCase()
+              if (param) param = param.toLowerCase();
               return manyToOneCtrl.list.filter(listItem => {
                 return listItem[manyToOneCtrl.field].toLowerCase().indexOf(param) != -1;
               })
             } else {
-              param = param || ''
               return manyToOneCtrl.searchMethod({ param }).then(data => {
                 if(data.filter(dataItem => dataItem[manyToOneCtrl.field] == param).length > 0 || !manyToOneCtrl.authorizeAdd){
                   return data

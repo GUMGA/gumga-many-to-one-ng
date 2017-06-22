@@ -34,20 +34,9 @@
 <body ng-controller="manyToOneCtrl">
 
   <div class="container">
-    <h3>Para o funcionamento do exemplo a seguir é necessária a instalação dos componentes:</h3>
-    <ul>
-      <li>Gumga Rest</li>
-      <li>Gumga Controller</li>
-    </ul>
-    <pre>
-  npm install gumga-rest-ng
-  npm install gumga-controller-ng
-  // ou
-  boewr install gumga-rest-ng
-  boewr install gumga-controller-ng
-  </pre>
+    <br><br><br>
     <div class="row">
-      <form name="Example">
+      <form name="Example" gumga-form="gForm">
         <div class="col-md-6">
           <gumga-many-to-one
             value="produtoB"
@@ -68,10 +57,10 @@
         <div class="col-md-6">
           <gumga-many-to-one
             value="data"
-            tab-seq="2"
             search-method="notificacao.methods.asyncSearch('mensagem', param)"
             authorize-add="true"
             field="mensagem"
+            async="true"
             post-method="notificacao.methods.asyncPost(value)"
             display-info="true">
               <!--<match>
@@ -82,6 +71,9 @@
           <label>Selecionado</label>
           <pre>{{data | json}}</pre>
         </div>
+
+
+        {{Example.$error}}
       </form>
     </div>
   </div>
@@ -93,10 +85,11 @@
   <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
   <script src="node_modules/gumga-rest-ng/dist/gumga-rest.js"></script>
   <script src="node_modules/gumga-controller-ng/dist/gumga-controller.js"></script>
+  <script src="node_modules/gumga-form-ng/dist/gumga-form.js"></script>
   <script src="dist/gumga-many-to-one.js"></script>
 
   <script>
-    angular.module('yourApp', ['gumga.rest', 'gumga.controller', 'gumga.manytoone'])
+    angular.module('yourApp', ['gumga.rest', 'gumga.controller', 'gumga.manytoone', 'gumga.form'])
       .config(function ($httpProvider) {
         $httpProvider.defaults.headers.common['gumgaToken'] = 'homologacaokids'
       })
