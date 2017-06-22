@@ -276,7 +276,7 @@
 
           let templateForInnerMatch = (!template) ? `<span ng-bind-html="match.model.${manyToOneCtrl.field} | uibTypeaheadHighlight:query"></span>` : `<span>${manyToOneCtrl.match}</span>`
           let templateForMatch = `
-          <a class="col-md-12 result gmd">
+          <a class="col-md-12 result gmd" style="white-space: normal;">
             <span class="col-md-10 str" ng-click="manyToOneCtrl.select()">
               ${templateForInnerMatch}
               <span ng-show="$parent.$parent.$parent.$parent.manyToOneCtrl.valueToAdd == match.label && $parent.$parent.$parent.$parent.manyToOneCtrl.valueToAdd.length > 0 && !match.model.id && !!$parent.$parent.$parent.$parent.manyToOneCtrl.authorizeAdd">(novo)</span><br>
