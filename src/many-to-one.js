@@ -248,10 +248,29 @@
           let baseTemplate = `
           <div>
             <div ng-class="{'input-group': (manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()}">
-              <input type="text" ng-init="manyToOneCtrl.visible = 'typeahead'" ng-show="manyToOneCtrl.visible == 'typeahead'" id="typeahead-${manyToOneCtrl.field}-${$attrs.value}" class="form-control gmd inputahead" tabindex="${manyToOneCtrl.tabSeq}" ng-disabled="manyToOneCtrl.disabled" ng-readonly="manyToOneCtrl.readonly" ng-model="manyToOneCtrl.value" ng-trim="true" uib-typeahead="$value as $value[manyToOneCtrl.field] for $value in manyToOneCtrl.proxySearch($viewValue)" typeahead-loading="manyToOneCtrl.typeaheadLoading" ${mirrorAttributes()}
-                     typeahead-template-url="manyToOneTemplate${manyToOneCtrl.field}-${$attrs.value}.html" typeahead-is-open="manyToOneCtrl.isTypeaheadOpen" typeahead-editable="${manyToOneCtrl.editable}" typeahead-show-hint="true" typeahead-min-length="0" typeahead-on-select="manyToOneCtrl.afterSelect($item, $model, $label, $event, 'isNotButton', manyToOneCtrl.match)" autocomplete="off"/>
-              <input type="text" ng-keyup="manyToOneCtrl.showTypeheadAndHideMatch()" ng-model="manyToOneCtrl.inputMatchValue" class="form-control" ng-show="manyToOneCtrl.visible == 'inputMatchValue'"/>
-              <div ng-show="manyToOneCtrl.typeaheadLoading && manyToOneCtrl.loadingText" style="position: absolute; top: 40px;">
+                <input type="text"
+                       ng-init="manyToOneCtrl.visible = 'typeahead'"
+                       ng-show="manyToOneCtrl.visible == 'typeahead'"
+                       id="typeahead-${manyToOneCtrl.field}-${$attrs.value}"
+                       class="form-control gmd inputahead"
+                       tabindex="${manyToOneCtrl.tabSeq}"
+                       ng-disabled="manyToOneCtrl.disabled"
+                       ng-readonly="manyToOneCtrl.readonly"
+                       ng-model="manyToOneCtrl.value"
+                       onfocus="this.classList.add('focused')"
+                       onblur="this.classList.remove('focused')"
+                       ng-trim="true"
+                       uib-typeahead="$value as $value[manyToOneCtrl.field] for $value in manyToOneCtrl.proxySearch($viewValue)"
+                       typeahead-loading="manyToOneCtrl.typeaheadLoading" ${mirrorAttributes()}
+                       typeahead-template-url="manyToOneTemplate${manyToOneCtrl.field}-${$attrs.value}.html"
+                       typeahead-is-open="manyToOneCtrl.isTypeaheadOpen"
+                       typeahead-editable="${manyToOneCtrl.editable}"
+                       typeahead-show-hint="true"
+                       typeahead-min-length="0"
+                       typeahead-on-select="manyToOneCtrl.afterSelect($item, $model, $label, $event, 'isNotButton', manyToOneCtrl.match)"
+                       autocomplete="off"/>
+                <input type="text" ng-keyup="manyToOneCtrl.showTypeheadAndHideMatch()" ng-model="manyToOneCtrl.inputMatchValue" class="form-control" ng-show="manyToOneCtrl.visible == 'inputMatchValue'"/>
+                <div ng-show="manyToOneCtrl.typeaheadLoading && manyToOneCtrl.loadingText" style="position: absolute; top: 40px;">
                 <i class="glyphicon glyphicon-refresh"></i>
                 {{manyToOneCtrl.loadingText}}
               </div>
@@ -270,7 +289,6 @@
                 </button>
               </div>
             </div>
-
           </div>`
 
 

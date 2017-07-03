@@ -8,79 +8,69 @@
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
     crossorigin="anonymous">
     <!--<link rel="stylesheet" href="https://gumga.github.io/layout/dist/gumga-layout.min.css">-->
-
-    <style>
-      /*gumga-many-to-one.gmd .dropdown-menu {
-      padding: 0;
-      border-width: 0 1 1;
-      border-color: #fff;
-      border-radius: 0;
-      -webkit-box-shadow: 0 2px 4px rgba(0,0,0,.175);
-      box-shadow: 0 2px 4px rgba(0,0,0,.175);
-      width: 100%;
-    }
-    gumga-many-to-one.gmd input[type="text"],
-    gumga-many-to-one.gmd button {
-      background: transparent !important;
-    }
-    gumga-many-to-one.gmd button {
-      border-width: 0 1 1px;
-      border-color: #ccc;
-    }*/
-    </style>
-
 </head>
 
 <body ng-controller="manyToOneCtrl">
 
-  <div class="container">
+  <div class="container gumga-layout">
     <br><br><br>
     <div class="row">
-      <form name="Example" gumga-form="gForm">
-        <div class="col-md-6">
-          <gumga-many-to-one
-            value="produtoB"
-            list="produtos"
-            field="nome"
-            authorize-add="false"
-            data-async="false"
-            display-info="false">
-            <match>
-              <div>{{match.model.nome}}</div>
-            </match>
-          </gumga-many-to-one>
+      <div class="panel gmd">
+        <div class="panel-body">
+          <form name="Example" gumga-form="gForm">
+            <div class="col-md-6">
 
-          <br>
-          <label>Selecionado</label>
-          <pre>{{produtoB | json}}</pre>
+              <gmd-input>
+                <gumga-many-to-one
+                  value="produtoB"
+                  class="gmd"
+                  list="produtos"
+                  required
+                  field="nome"
+                  authorize-add="false"
+                  data-async="false"
+                  display-info="false">
+                  <match>
+                    <div>{{match.model.nome}}</div>
+                  </match>
+                </gumga-many-to-one>
+              </gmd-input>
+
+              <br>
+              <label>Selecionado</label>
+              <pre>{{produtoB | json}}</pre>
+            </div>
+            <div class="col-md-6">
+              <gumga-many-to-one
+                value="data"
+                class="gmd"
+                search-method="notificacao.methods.asyncSearch('mensagem', param)"
+                authorize-add="true"
+                field="mensagem"
+                async="true"
+                post-method="notificacao.methods.asyncPost(value)"
+                display-info="true">
+                  <!--<match>
+                      <div>{{match.model.historico}}</div>
+                  </match>-->
+              </gumga-many-to-one>
+              <br>
+              <label>Selecionado</label>
+              <pre>{{data | json}}</pre>
+            </div>
+
+
+            {{Example.$error}}
+          </form>
         </div>
-        <div class="col-md-6">
-          <gumga-many-to-one
-            value="data"
-            search-method="notificacao.methods.asyncSearch('mensagem', param)"
-            authorize-add="true"
-            field="mensagem"
-            async="true"
-            post-method="notificacao.methods.asyncPost(value)"
-            display-info="true">
-              <!--<match>
-                  <div>{{match.model.historico}}</div>
-              </match>-->
-          </gumga-many-to-one>
-          <br>
-          <label>Selecionado</label>
-          <pre>{{data | json}}</pre>
-        </div>
-
-
-        {{Example.$error}}
-      </form>
+      </div>
     </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="node_modules/angular/angular.min.js"></script>
+  <script src="https://gumga.github.io/layout/gumga-layout/gumga-layout.js"></script>
   <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
   <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
   <script src="node_modules/gumga-rest-ng/dist/gumga-rest.js"></script>
@@ -89,7 +79,7 @@
   <script src="dist/gumga-many-to-one.js"></script>
 
   <script>
-    angular.module('yourApp', ['gumga.rest', 'gumga.controller', 'gumga.manytoone', 'gumga.form'])
+    angular.module('yourApp', ['gumga.rest', 'gumga.controller', 'gumga.manytoone', 'gumga.form', 'gumga.layout'])
       .config(function ($httpProvider) {
         $httpProvider.defaults.headers.common['gumgaToken'] = 'homologacaokids'
       })
