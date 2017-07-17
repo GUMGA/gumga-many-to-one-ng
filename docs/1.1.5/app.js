@@ -6,7 +6,12 @@ angular.module('app', ['ui.bootstrap', 'gumga.manytoone'])
       { nome: 'Smart TV LED 43" Samsung', id: 3 },
       { nome: 'Ar Condicionado Split 7000 BTU/s', id: 4 }
     ];
+
     $scope.produto = $scope.produtos[1];
+
+    $scope.deselectCallback = function(value){
+      console.log(value);
+    }
 
     // Este método precisa ser assíncrono
     $scope.getSearch = function(param){

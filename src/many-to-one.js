@@ -149,6 +149,9 @@
 
           function clearModel(){
             manyToOneCtrl.visible = 'typeahead';
+            if(manyToOneCtrl.onDeselect){
+              manyToOneCtrl.onDeselect({value: angular.copy(manyToOneCtrl.value)});
+            }
             delete manyToOneCtrl.value;
           }
 
@@ -354,6 +357,7 @@
               searchMethod:     '&',
               postMethod:       '&?',
               onSelect:         '&?',
+              onDeselect:       '&?',
               list:             '=?',
               authorizeAdd:     '=?',
               disabled:         '=?',
