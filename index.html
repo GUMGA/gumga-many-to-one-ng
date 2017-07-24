@@ -43,13 +43,14 @@
             </div>
             <div class="col-md-6">
               <gumga-many-to-one
-                value="data"
+                value="outroNomeQueNaoSejaDataComCamecase"
                 class="gmd"
-                search-method="notificacao.methods.asyncSearch('mensagem', param)"
+                search-method="pessoas.methods.asyncSearch('mensagem', param)"
                 authorize-add="true"
-                field="mensagem"
+                on-select="selected(value)"
+                field="nomeFonetico"
                 async="true"
-                post-method="notificacao.methods.asyncPost(value)"
+                post-method="pessoas.methods.asyncPost(value)"
                 display-info="true">
                   <!--<match>
                       <div>{{match.model.historico}}</div>
@@ -57,7 +58,7 @@
               </gumga-many-to-one>
               <br>
               <label>Selecionado</label>
-              <pre>{{data | json}}</pre>
+              <pre>{{outroNomeQueNaoSejaDataComCamecase | json}}</pre>
             </div>
 
 
@@ -111,6 +112,10 @@
             .then(function(response) {
               return response.data.values
             })
+          }
+
+          $scope.selected = function(value){
+            console.log('foi', value);
           }
 
           // $scope.asyncSearch = function (param) {

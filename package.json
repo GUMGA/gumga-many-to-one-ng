@@ -1,13 +1,13 @@
 {
   "name": "gumga-many-to-one-ng",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Gumga Many To One",
   "main": "./src/many-to-one.js",
   "directories": {
     "example": "example"
   },
   "dependencies": {
-    "angular": "1.5.8",
+    "angular": "^1.6.4",
     "angular-ui-bootstrap": "2.3.2"
   },
   "babel": {
@@ -16,7 +16,7 @@
     ]
   },
   "devDependencies": {
-    "angular": "^1.5.8",
+    "angular": "^1.6.4",
     "angular-ui-bootstrap": "^2.3.2",
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.8",
