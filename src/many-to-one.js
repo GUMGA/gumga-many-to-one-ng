@@ -249,6 +249,11 @@
 
             /*  */
             let baseTemplate = `
+            <style>
+              gumga-many-to-one [uib-typeahead-popup].dropdown-menu{
+                  width: 100%;
+              }
+            </style>
             <div>
               <div ng-class="{'input-group': (manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()}">
                   <input type="text"
@@ -263,6 +268,7 @@
                          onfocus="this.classList.add('focused')"
                          onblur="this.classList.remove('focused')"
                          ng-trim="true"
+                         ng-model-options="{ debounce: ${manyToOneCtrl.debounce || 1000} }"
                          uib-typeahead="$value as $value[manyToOneCtrl.field] for $value in manyToOneCtrl.proxySearch($viewValue)"
                          typeahead-loading="manyToOneCtrl.typeaheadLoading" ${mirrorAttributes()}
                          typeahead-template-url="manyToOneTemplate${manyToOneCtrl.field}-${$attrs.value}.html"
@@ -271,7 +277,11 @@
                          typeahead-show-hint="true"
                          typeahead-min-length="0"
                          typeahead-on-select="manyToOneCtrl.afterSelect($item, $model, $label, $event, 'isNotButton', manyToOneCtrl.match)"
+                         typeahead-no-results="noResults"
                          autocomplete="off"/>
+                         <div ng-show="noResults" style="position: absolute; left: 0; width: 100%; top: 34px; background: #FFF; z-index: 999; padding: 15px; border-top: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.175);">
+                          {{${manyToOneCtrl.messageNoResult} || 'Nenhum resultado foi encontrado.'}}
+                         </div>
                   <input type="text" ng-keyup="manyToOneCtrl.showTypeheadAndHideMatch()" ng-model="manyToOneCtrl.inputMatchValue" class="form-control" ng-show="manyToOneCtrl.visible == 'inputMatchValue'"/>
                   <div ng-show="manyToOneCtrl.typeaheadLoading && manyToOneCtrl.loadingText" style="position: absolute; top: 40px;">
                   <i class="glyphicon glyphicon-refresh"></i>
@@ -296,6 +306,7 @@
 
 
             let templateForInnerMatch = (!template) ? `<span ng-bind-html="match.model.${manyToOneCtrl.field} | uibTypeaheadHighlight:query"></span>` : `<span>${manyToOneCtrl.match}</span>`
+
             let templateForMatch = `
             <a class="col-md-12 result gmd" style="white-space: normal;">
               <span class="col-md-10 str" ng-click="manyToOneCtrl.select()">
@@ -308,7 +319,8 @@
                 </span>
               </span>
               <div class="clearfix"></div>
-            </a>`
+            </a>
+            `
 
             $templateCache.put(`manyToOneTemplate${manyToOneCtrl.field}-${$attrs.value}.html`, templateForMatch)
 
@@ -368,7 +380,8 @@
               displayClear:     '=?',
               editable:         '=?',
               tabSeq:           '=?',
-              async:            '=?'
+              async:            '=?',
+              debounce:          '@?'
             },
             controllerAs: 'manyToOneCtrl',
             bindToController: true,
