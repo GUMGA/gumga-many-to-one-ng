@@ -17,7 +17,7 @@
     <div class="row">
       <div class="panel gmd">
         <div class="panel-body">
-          <form name="Example" gumga-form="gForm">
+          <form name="Example">
             <div class="col-md-6">
 
               <gmd-input>
@@ -62,7 +62,8 @@
             </div>
 
 
-            {{Example.$error}}
+            <pre>{{Example.$error |json}}</pre>
+
           </form>
         </div>
       </div>
@@ -103,7 +104,6 @@
           }
 
           $scope.tirou = function(value) {
-            console.log('removeu', value);
           }
 
           $scope.advancedSearch = function(param) {
@@ -115,7 +115,6 @@
           }
 
           $scope.selected = function(value){
-            console.log('foi', value);
           }
 
           // $scope.asyncSearch = function (param) {

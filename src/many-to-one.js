@@ -70,7 +70,6 @@
                   }
                   let objToAppend = {}
                   objToAppend[manyToOneCtrl.field] = manyToOneCtrl.valueToAdd;
-
                   return data.concat(objToAppend)
                 })
               }
@@ -200,6 +199,7 @@
               if(!$model.id && manyToOneCtrl.authorizeAdd) {
                 manyToOneCtrl.proxySave($model, isBtn);
               }
+              ngModelCtrl.$setValidity('manyToOne', true);
               if(manyToOneCtrl.ev.onSelect) manyToOneCtrl.ev.onSelect({value: $model});
             }
 
@@ -335,11 +335,12 @@
             ngModelCtrl       = input.controller('ngModel')
             ngModelCtrlReset  = angular.copy(ngModelCtrl)
 
-            formController.$addControl(ngModelCtrl)
+            formController.$addControl(ngModelCtrl);
 
             ngModelCtrl.$viewChangeListeners.push(() => {
               // console.log('$viewChangeListeners', ngModelCtrl.$viewValue)
             })
+
             ngModelCtrl.$validators.manyToOne = (modelValue, viewValue) => {
               return modelValue ? !(typeof modelValue === 'string' || modelValue instanceof String) : true
             }

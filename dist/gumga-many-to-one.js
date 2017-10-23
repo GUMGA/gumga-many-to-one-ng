@@ -161,7 +161,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
               }
               var objToAppend = {};
               objToAppend[manyToOneCtrl.field] = manyToOneCtrl.valueToAdd;
-
               return data.concat(objToAppend);
             });
           }
@@ -273,6 +272,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           if (!$model.id && manyToOneCtrl.authorizeAdd) {
             manyToOneCtrl.proxySave($model, isBtn);
           }
+          ngModelCtrl.$setValidity('manyToOne', true);
           if (manyToOneCtrl.ev.onSelect) manyToOneCtrl.ev.onSelect({ value: $model });
         }
 
@@ -339,6 +339,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         ngModelCtrl.$viewChangeListeners.push(function () {
           // console.log('$viewChangeListeners', ngModelCtrl.$viewValue)
         });
+
         ngModelCtrl.$validators.manyToOne = function (modelValue, viewValue) {
           return modelValue ? !(typeof modelValue === 'string' || modelValue instanceof String) : true;
         };
