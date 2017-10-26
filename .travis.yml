@@ -9,3 +9,5 @@ script:
 branches:
   only:
   - master 
+before_install:
+- printf "//registry.npmjs.org/:_authToken=${NPM_TOKEN}\n" >> .npmrc
