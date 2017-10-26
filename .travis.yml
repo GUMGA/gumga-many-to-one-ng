@@ -8,3 +8,10 @@ script:
 branches:
   only:
   - master 
+deploy:
+  provider: releases
+  api_key: $GH_TOKEN
+  skip_cleanup: true
+  on:
+    branch: master    
+    tags: true  
