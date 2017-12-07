@@ -37,32 +37,27 @@
                 </gumga-many-to-one>
               </gmd-input>
 
-              <br>
-              <label>Selecionado</label>
-              <pre>{{produtoB | json}}</pre>
             </div>
             <div class="col-md-6">
               <gumga-many-to-one
                 value="outroNomeQueNaoSejaDataComCamecase"
                 class="gmd"
-                search-method="pessoas.methods.asyncSearch('mensagem', param)"
+                search-method="pessoas.methods.asyncSearch('name', param)"
                 authorize-add="true"
                 on-select="selected(value)"
-                field="nomeFonetico"
+                field="name"
                 async="true"
+                post-fields="name:required,idade,cep:required"
                 post-method="pessoas.methods.asyncPost(value)"
                 display-info="true">
-                  <!--<match>
-                      <div>{{match.model.historico}}</div>
-                  </match>-->
+                  <match>
+                      <div>{{match.model.name}}</div>
+                  </match>
               </gumga-many-to-one>
               <br>
-              <label>Selecionado</label>
-              <pre>{{outroNomeQueNaoSejaDataComCamecase | json}}</pre>
             </div>
 
 
-            <pre>{{Example.$error |json}}</pre>
 
           </form>
         </div>
@@ -84,7 +79,7 @@
   <script>
     angular.module('yourApp', ['gumga.rest', 'gumga.controller', 'gumga.manytoone', 'gumga.form', 'gumga.layout'])
       .config(function ($httpProvider) {
-        $httpProvider.defaults.headers.common['gumgaToken'] = 'homologacaokids'
+        $httpProvider.defaults.headers.common['gumgaToken'] = 'eterno'
       })
       .controller('manyToOneCtrl', ['gumgaController', 'GumgaRest', '$scope', '$http', '$q',
         function (gumgaController, GumgaRest, $scope, $http, $q) {
@@ -95,7 +90,7 @@
           var NotificacaoService = new GumgaRest('http://192.168.25.250/gileadeweb-api/api/notificacao');
           gumgaController.createRestMethods($scope, NotificacaoService, 'notificacao');
 
-          var PessoaService = new GumgaRest('http://192.168.25.250/gileadeweb-api/api/pessoacadastro');
+          var PessoaService = new GumgaRest('https://gumga.io/security-api/api/software');
           gumgaController.createRestMethods($scope, PessoaService, 'pessoas');
           // $scope.pessoas.methods.get();
 

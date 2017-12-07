@@ -68,9 +68,12 @@
                   if(data.filter(dataItem => dataItem[manyToOneCtrl.field] == param).length > 0 || !manyToOneCtrl.authorizeAdd){
                     return data
                   }
-                  let objToAppend = {}
-                  objToAppend[manyToOneCtrl.field] = manyToOneCtrl.valueToAdd;
-                  return data.concat(objToAppend)
+                  if(param){
+                    let objToAppend = {};
+                    objToAppend[manyToOneCtrl.field] = manyToOneCtrl.valueToAdd;
+                    return data.concat(objToAppend)
+                  }
+                  return data;
                 })
               }
             }
@@ -89,14 +92,16 @@
               }
 
               function mountModalBody(){
-                let fields = manyToOneCtrl.postFields
+                let fields = manyToOneCtrl.postFields;
                 return fields.reduce((prev, next) => {
+                  let field = next.indexOf(':') != -1 ? next.trim().substring(0, next.indexOf(':')) : next.trim();
+                  let required = next.indexOf(':') != -1 ? next.trim().substring(next.indexOf(':') + 1, next.length) : 'false';
                   return prev += `
                   <div class="form-group">
-                    <label>${next}</label>
-                    <input type="text" class="form-control" ng-model="ctrl.object.${next}" />
-                  </div>`
-                }, ' ')
+                    <label>${field}</label>
+                    <input type="text" class="form-control" ${required == 'required' ? required : ''} ng-model="ctrl.object.${field}" />
+                  </div>`;
+                }, ' ');
               }
 
               let template = `
@@ -104,12 +109,14 @@
                   <h3 class="modal-title">${manyToOneCtrl.modalTitle}</h3>
                 </div>
                 <div class="modal-body">
-                  ${mountModalBody()}
+                  <form name="formNew">
+                    ${mountModalBody()}
+                  </form>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" ng-click="ctrl.cancel(ctrl.object)">Retornar</button>
-                  <button type="button" class="btn btn-primary" ng-click="ctrl.save(ctrl.object)">Salvar</button>
-                </div>`
+                  <button type="button" class="btn btn-primary" ng-disabled="!formNew.$valid" ng-click="ctrl.save(ctrl.object)">Salvar</button>
+                </div>`;
 
 
               $uibModal
@@ -247,11 +254,26 @@
               });
             })
 
+            manyToOneCtrl.keyUp = ($event) => {
+              if($event.target.value == ''){
+                angular.element($event.target).blur();
+                $timeout(() => angular.element($event.target).focus(), 500);
+              }
+            }
+
             /*  */
             let baseTemplate = `
             <style>
               gumga-many-to-one [uib-typeahead-popup].dropdown-menu{
                   width: 100%;
+              }
+              gumga-many-to-one a.result {
+                display: flex;
+                height: 42px;
+                align-items: center;
+              }
+              gumga-many-to-one a.result > span.str{
+                display: flex;
               }
             </style>
             <div>
@@ -266,8 +288,8 @@
                          ng-readonly="manyToOneCtrl.readonly"
                          ng-model="manyToOneCtrl.value"
                          onfocus="this.classList.add('focused')"
+                         ng-keyup="manyToOneCtrl.keyUp($event)"
                          onblur="this.classList.remove('focused')"
-                         ng-trim="true"
                          ng-model-options="{ debounce: ${manyToOneCtrl.debounce || 1000} }"
                          uib-typeahead="$value as $value[manyToOneCtrl.field] for $value in manyToOneCtrl.proxySearch($viewValue)"
                          typeahead-loading="manyToOneCtrl.typeaheadLoading" ${mirrorAttributes()}
