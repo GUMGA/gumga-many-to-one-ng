@@ -25,9 +25,12 @@
                   value="produtoB"
                   class="gmd"
                   list="produtos"
+                  name="teste"
                   required
                   field="nome"
+                  placeholder="Funcionário"
                   authorize-add="false"
+                  active-favorite="true"
                   on-deselect="tirou(value)"
                   data-async="false"
                   display-info="false">
@@ -39,22 +42,17 @@
 
             </div>
             <div class="col-md-6">
-              <gumga-many-to-one
-                value="outroNomeQueNaoSejaDataComCamecase"
-                class="gmd"
-                search-method="pessoas.methods.asyncSearch('name', param)"
-                authorize-add="true"
-                on-select="selected(value)"
-                field="name"
-                async="true"
-                post-fields="name:required,idade,cep:required"
-                post-method="pessoas.methods.asyncPost(value)"
-                display-info="true">
-                  <match>
-                      <div>{{match.model.name}}</div>
-                  </match>
-              </gumga-many-to-one>
-              <br>
+              <gmd-select ng-model="example.select"
+                          placeholder="Funcionário">
+                <gmd-option-empty>
+                  Nenhum
+                </gmd-option-empty>
+                <gmd-option ng-repeat="option in options"
+                            ng-value="option"
+                            ng-label="option.name">
+                  {{option.name}}
+                </gmd-option>
+              </gmd-select>
             </div>
 
 
@@ -66,7 +64,7 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>a
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="node_modules/angular/angular.min.js"></script>
   <script src="https://gumga.github.io/layout/gumga-layout/gumga-layout.js"></script>
   <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
@@ -83,6 +81,11 @@
       })
       .controller('manyToOneCtrl', ['gumgaController', 'GumgaRest', '$scope', '$http', '$q',
         function (gumgaController, GumgaRest, $scope, $http, $q) {
+
+          $scope.options = [
+            { name: 'Gustavo joaquim', id: 1 },
+            { name: 'Augusto Carniel', id: 2 }
+          ]
 
           var HistoricoService = new GumgaRest('http://192.168.25.250/gileadeweb-api/api/historico');
           gumgaController.createRestMethods($scope, HistoricoService, 'historico');

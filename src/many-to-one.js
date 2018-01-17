@@ -18,7 +18,13 @@
 
             const possibleAttributes  = ['loadingText', 'onSelect', 'value', 'list', 'searchMethod', 'field', 'onNewValueAdded', 'onValueSelected', 'onValueVisualizationOpened', 'onValueVisualizationClosed', 'tabindex']
 
-            let template = false
+            let template = false;
+
+            manyToOneCtrl.favoriteModel = JSON.parse(getCookie(location.href+'-favorite-'+$attrs.name));
+
+            if(!manyToOneCtrl.value && manyToOneCtrl.favoriteModel && manyToOneCtrl.activeFavorite){
+              manyToOneCtrl.value = angular.copy(manyToOneCtrl.favoriteModel);
+            }
 
             if(!$attrs.value)        console.error(ERR_MSGS.noValue)
             if(!$attrs.field)        console.error(ERR_MSGS.noField)
@@ -254,11 +260,53 @@
               });
             })
 
+            // POR FAVOR NAO REMOVE ESSA FUNÇÃO ELA É ESSENCIAL
             manyToOneCtrl.keyUp = ($event) => {
               if($event.target.value == ''){
-                angular.element($event.target).blur();
-                $timeout(() => angular.element($event.target).focus(), 500);
+                // angular.element($event.target).blur();
+                // $timeout(() => angular.element($event.target).focus(), 500);
               }
+            }
+
+            function setCookie(name,value,days) {
+              var expires = "";
+                if (days) {
+                    var date = new Date();
+                    date.setTime(date.getTime() + (days*24*60*60*1000));
+                    expires = "; expires=" + date.toUTCString();
+                }
+                document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+            }
+
+            function getCookie(name) {
+                var nameEQ = name + "=";
+                var ca = document.cookie.split(';');
+                for(var i=0;i < ca.length;i++) {
+                    var c = ca[i];
+                    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+                }
+                return null;
+            }
+
+            function eraseCookie(name) {   
+                document.cookie = name+'=; Max-Age=-99999999;';  
+            }
+
+            manyToOneCtrl.favorite = ($event, model) => {
+              $event.stopPropagation();
+              $event.preventDefault();
+              if(angular.equals(model, manyToOneCtrl.favoriteModel)){
+                eraseCookie(location.href+'-favorite-'+$attrs.name);
+                delete manyToOneCtrl.favoriteModel;
+                return;
+              }
+              setCookie(location.href+'-favorite-'+$attrs.name, JSON.stringify(model), 999999);
+              manyToOneCtrl.favoriteModel = model;
+            }
+
+            manyToOneCtrl.isFavorite = model => {
+              return angular.equals(model, manyToOneCtrl.favoriteModel);
             }
 
             /*  */
@@ -275,9 +323,29 @@
               gumga-many-to-one a.result > span.str{
                 display: flex;
               }
+              gumga-many-to-one input{
+                color: #999 !important;
+                padding-right: 32px;
+                font-size: 1.6rem !important;
+              }
+              gumga-many-to-one button.left-button{
+                padding: 0; width: 32px; padding-top: 10px; padding-bottom: 3px;
+              }
+              gumga-many-to-one input.form-control.ng-valid-many-to-one{
+                color: #555 !important;
+              }
+              gumga-many-to-one i.favorite{
+                color: #ccc;
+              }
+              gumga-many-to-one i.favorite.full{
+                color: #d9d90d;
+              }
+              gumga-many-to-one i.favorite:hover{
+                cursor: pointer; 
+              }
             </style>
-            <div>
-              <div ng-class="{'input-group': (manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()}">
+            <div style="position: relative;">
+              <div style="width: 100%;" ng-class="{'input-group': (manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()}">
                   <input type="text"
                          ng-init="manyToOneCtrl.visible = 'typeahead'"
                          ng-show="manyToOneCtrl.visible == 'typeahead'"
@@ -310,14 +378,16 @@
                   {{manyToOneCtrl.loadingText}}
                 </div>
                 <span ng-hide="true" id="match-${manyToOneCtrl.field}-${$attrs.value}"></span>
-                <div class="input-group-btn input-group-btn-icon" ng-show="(manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()">
-                  <button type="button" class="btn btn-default gmd" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton()" ng-click="manyToOneCtrl.clearModel()">
-                    <span class="glyphicon glyphicon-remove"></span>
+                <div class="input-group-btn input-group-btn-icon" style="position: absolute; right: 25px;" ng-show="(manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()">
+                  <button type="button" style="z-index: 9;" class="left-button btn btn-default gmd" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton()" ng-click="manyToOneCtrl.clearModel()">
+                    <i ng-show="manyToOneCtrl.useGumgaLayout()" class="material-icons" style="font-size: 15px;">close</i>
+                    <i ng-show="!manyToOneCtrl.useGumgaLayout()" class="glyphicon glyphicon-remove" style="font-size: 15px;"></i>
                   </button>
                   <button type="button" class="btn btn-default gmd"
                           ng-show="manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton()"
+                          style="padding-bottom: 7px;"
                           ng-click="manyToOneCtrl.openTypehead()">
-                    <span class="{{!manyToOneCtrl.isTypeaheadOpen ? 'glyphicon glyphicon-chevron-down' : 'glyphicon glyphicon-chevron-up'}}"></span>
+                    <span class="caret"></span>                    
                   </button>
                   <button type="button" class="btn btn-default gmd" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayInfoButton()" ng-disabled="manyToOneCtrl.disabledDisplayInfo()" ng-click="manyToOneCtrl.openInfo(manyToOneCtrl.value, $event)">
                     <span class="glyphicon glyphicon-info-sign"></span>
@@ -338,6 +408,17 @@
               <span class="col-md-2">
                 <span class="icon text-right" ng-if="${manyToOneCtrl.displayInfo}" ng-click="$parent.$parent.$parent.$parent.manyToOneCtrl.openInfo(match.model, $event)" ng-hide="$parent.$parent.$parent.$parent.manyToOneCtrl.valueToAdd == match.label && !match.label.id">
                   <span class="glyphicon glyphicon-info-sign"></span>
+                </span>
+                <span style="float: right;" ng-show="$parent.$parent.$parent.$parent.manyToOneCtrl.activeFavorite">
+                  <i ng-show="!$parent.$parent.$parent.$parent.manyToOneCtrl.isFavorite(match.model)" 
+                     title="Favoritar"
+                     ng-click="$parent.$parent.$parent.$parent.manyToOneCtrl.favorite($event, match.model)" 
+                     class="material-icons favorite">star_border</i>
+
+                  <i ng-show="$parent.$parent.$parent.$parent.manyToOneCtrl.isFavorite(match.model)"
+                     title="Favoritar" 
+                     ng-click="$parent.$parent.$parent.$parent.manyToOneCtrl.favorite($event, match.model)" 
+                     class="material-icons favorite full">star</i>
                 </span>
               </span>
               <div class="clearfix"></div>
@@ -367,6 +448,14 @@
               return modelValue ? !(typeof modelValue === 'string' || modelValue instanceof String) : true
             }
 
+            manyToOneCtrl.useGumgaLayout = () => {
+              try {
+                return !!angular.module('gumga.layout');
+              } catch (error) {
+                return false;
+              }
+            }
+
             if(!modelValueIsObject()){
                handlingInputVisible();
             }
@@ -394,6 +483,7 @@
               searchMethod:     '&',
               postMethod:       '&?',
               onSelect:         '&?',
+              activeFavorite:   '=?',
               onDeselect:       '&?',
               list:             '=?',
               authorizeAdd:     '=?',
