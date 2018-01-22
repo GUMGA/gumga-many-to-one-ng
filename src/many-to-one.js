@@ -20,7 +20,16 @@
 
             let template = false;
 
-            manyToOneCtrl.favoriteModel = JSON.parse(getCookie(location.href+'-favorite-'+$attrs.name));
+            manyToOneCtrl.favoriteModel = JSON.parse(getCookie('favorite-'+$attrs.name));
+
+            if($attrs.debug && manyToOneCtrl.activeFavorite){
+              console.log('Cookie: ', getCookie('favorite-'+$attrs.name));
+            }
+
+            if($attrs.debug){
+              console.log('ngModel: ', manyToOneCtrl.value);
+              console.log('activeFavorite: ', manyToOneCtrl.activeFavorite);
+            }
 
             if(!manyToOneCtrl.value && manyToOneCtrl.favoriteModel && manyToOneCtrl.activeFavorite){
               manyToOneCtrl.value = angular.copy(manyToOneCtrl.favoriteModel);
@@ -297,11 +306,11 @@
               $event.stopPropagation();
               $event.preventDefault();
               if(angular.equals(model, manyToOneCtrl.favoriteModel)){
-                eraseCookie(location.href+'-favorite-'+$attrs.name);
+                eraseCookie('favorite-'+$attrs.name);
                 delete manyToOneCtrl.favoriteModel;
                 return;
               }
-              setCookie(location.href+'-favorite-'+$attrs.name, JSON.stringify(model), 999999);
+              setCookie('favorite-'+$attrs.name, JSON.stringify(model), 999999);
               manyToOneCtrl.favoriteModel = model;
             }
 
