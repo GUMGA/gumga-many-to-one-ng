@@ -19,23 +19,25 @@
         <div class="panel-body">
           <form name="Example">
             <div class="col-md-6">
+              {{produto}}
 
+
+              <!-- label -->
               <gmd-input>
                 <gumga-many-to-one
-                  value="produtoB"
+                  value="produto"
                   class="gmd"
-                  list="produtos"
+                  list="pessoas.data"
+                  search-method="pessoas.methods.asyncSearch('name', param)"
                   name="teste"
                   required
-                  field="nome"
-                  placeholder="Funcionário"
+                  field="name"
                   authorize-add="false"
                   active-favorite="true"
-                  on-deselect="tirou(value)"
-                  data-async="false"
+                  async="true"
                   display-info="false">
                   <match>
-                    <div>{{match.model.nome}}</div>
+                    <div>{{match.model.name}}</div>
                   </match>
                 </gumga-many-to-one>
               </gmd-input>
@@ -93,32 +95,18 @@
           var NotificacaoService = new GumgaRest('http://192.168.25.250/gileadeweb-api/api/notificacao');
           gumgaController.createRestMethods($scope, NotificacaoService, 'notificacao');
 
-          var PessoaService = new GumgaRest('https://gumga.io/security-api/api/software');
+          var PessoaService = new GumgaRest('https://gumga.io/security-api/api/user');
           gumgaController.createRestMethods($scope, PessoaService, 'pessoas');
           // $scope.pessoas.methods.get();
 
-          var saveModal = function(value) {
-            return $scope.historico.methods.asyncPost(value)
+  
+
+
+          $scope.asyncSearch = function (param) {
+            console.log(param);
+            $scope.pessoas.methods.asyncSearch('name', param)
           }
 
-          $scope.tirou = function(value) {
-          }
-
-          $scope.advancedSearch = function(param) {
-            // param = param || ''
-            return HistoricoService.getAdvancedSearch('lower(historico) like lower(\'%' + param + '%\')')
-            .then(function(response) {
-              return response.data.values
-            })
-          }
-
-          $scope.selected = function(value){
-          }
-
-          // $scope.asyncSearch = function (param) {
-          //   console.log(param)
-          //   $scope.pessoas.methods.asyncSearch('nome', param)
-          // }
           // $scope.getSearch = function (param) {
           //   return $q(function (resolve) {
           //     var arr = $scope.produtos.filter(function (produto) {
@@ -129,18 +117,18 @@
           //   })
           // }
 
-          $scope.data = {
-            "id": 21,
-            "oi": {
-              "value": "4."
-            },
-            "version": 0,
-            "dataCriacao": null,
-            "mensagem": "aa",
-            "automatico": null,
-            "tipo": null,
-            "validade": null
-          }
+          // $scope.data = {
+          //   "id": 21,
+          //   "oi": {
+          //     "value": "4."
+          //   },
+          //   "version": 0,
+          //   "dataCriacao": null,
+          //   "mensagem": "aa",
+          //   "automatico": null,
+          //   "tipo": null,
+          //   "validade": null
+          // }
 
           $scope.produtos = [
             {
@@ -160,6 +148,8 @@
               valor: 4
             }
           ];
+
+          $scope.produto = null;
 
           // $scope.produto = {
           //   "id": 1,

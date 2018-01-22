@@ -20,10 +20,14 @@
 
             let template = false;
 
-            manyToOneCtrl.favoriteModel = JSON.parse(getCookie('favorite-'+$attrs.name));
+            let cache = getCookie(getKeyCookie());
+            
+            if(cache){
+              manyToOneCtrl.favoriteModel = JSON.parse(cache);
+            }
 
             if($attrs.debug && manyToOneCtrl.activeFavorite){
-              console.log('Cookie: ', getCookie('favorite-'+$attrs.name));
+              console.log('Cookie: ', getCookie(getKeyCookie()));
             }
 
             if($attrs.debug){
@@ -158,6 +162,16 @@
               return manyToOneCtrl.displayInfo
             }
 
+            function getKeyCookie() {
+              let user = sessionStorage.getItem('user');
+              if(user){
+                user = JSON.parse(user);
+                return (user.instanceOrganizationHierarchyCode || '') + 'favorite-' + $attrs.name;
+              }else{
+                return 'favorite-' + $attrs.name;
+              }
+            }
+
             function modelValueIsObject(){
               if (manyToOneCtrl.disabled) return true
               if (!manyToOneCtrl.value) return true;
@@ -174,15 +188,21 @@
                 manyToOneCtrl.onDeselect({value: angular.copy(manyToOneCtrl.value)});
               }
               delete manyToOneCtrl.value;
-            }
-
-            function openTypehead(){
-              if(manyToOneCtrl.isTypeaheadOpen) return;
               document.getElementById('typeahead-' + manyToOneCtrl.field + '-' + $attrs.value).focus();
             }
 
+            function openTypehead(){
+              if(manyToOneCtrl.value){
+                delete manyToOneCtrl.value;
+                showTypeheadAndHideMatch();
+              }else{
+                if(manyToOneCtrl.isTypeaheadOpen) return;
+                document.getElementById('typeahead-' + manyToOneCtrl.field + '-' + $attrs.value).focus();
+              }
+            }
+
             function showTypeheadAndHideMatch(){
-              manyToOneCtrl.visible = 'typeahead'
+              manyToOneCtrl.visible = 'typeahead';
 
               $timeout(()=>{
                 manyToOneCtrl.value = angular.copy(manyToOneCtrl.inputMatchValue);
@@ -306,11 +326,11 @@
               $event.stopPropagation();
               $event.preventDefault();
               if(angular.equals(model, manyToOneCtrl.favoriteModel)){
-                eraseCookie('favorite-'+$attrs.name);
+                eraseCookie(getKeyCookie());
                 delete manyToOneCtrl.favoriteModel;
                 return;
               }
-              setCookie('favorite-'+$attrs.name, JSON.stringify(model), 999999);
+              setCookie(getKeyCookie(), JSON.stringify(model), 999999);
               manyToOneCtrl.favoriteModel = model;
             }
 
@@ -352,8 +372,65 @@
               gumga-many-to-one i.favorite:hover{
                 cursor: pointer; 
               }
+              gumga-many-to-one .input-group button.btn[ng-click="manyToOneCtrl.openTypehead()"]{
+                z-index: 9;
+              }
+              gumga-many-to-one .progress {
+                max-width: 100%;
+                overflow: hidden;
+                background: #ddd;
+                left: 0;
+                width: 100%;
+                border-radius: 0;
+                height: 2px;
+                bottom: 0;
+                margin: 0;
+                padding: 0;
+                bottom: 0;
+                height: 3px;
+                z-index: 4;
+              }
+              gumga-many-to-one .indeterminate {
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                transform: translateZ(0);
+              }
+              gumga-many-to-one .indeterminate:before, .indeterminate:after {
+                content: '';
+                position: absolute;
+                background-color: #001eff;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+              }
+              gumga-many-to-one .indeterminate:before {
+                animation: indeterminate 3s cubic-bezier(0.195, 0.36, 0.945, 1.65) infinite;
+              }
+              gumga-many-to-one .indeterminate:after {
+                animation: indeterminate 3s cubic-bezier(0.9, -0.59, 0.715, 1.045) infinite;
+              }
+              
+              @keyframes indeterminate {
+                0% {
+                  width: 0%;
+                  transform: translateX(-100%);
+                }
+                100% {
+                  width: 100%;
+                  transform: translateX(100%);
+                }
+              }
+              gumga-many-to-one input.form-control.gmd.size-55{
+                padding-right: 55px;
+              }
+              gumga-many-to-one input.form-control.gmd.size-25{
+                padding-right: 25px;
+              }
             </style>
             <div style="position: relative;">
+              <div class="progress indeterminate" ng-show="manyToOneCtrl.typeaheadLoading"></div>
               <div style="width: 100%;" ng-class="{'input-group': (manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()}">
                   <input type="text"
                          ng-init="manyToOneCtrl.visible = 'typeahead'"
@@ -365,6 +442,7 @@
                          ng-readonly="manyToOneCtrl.readonly"
                          ng-model="manyToOneCtrl.value"
                          onfocus="this.classList.add('focused')"
+                         ng-class="{'size-25' : manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton(), 'size-55' : !(manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton())}"
                          ng-keyup="manyToOneCtrl.keyUp($event)"
                          onblur="this.classList.remove('focused')"
                          ng-model-options="{ debounce: ${manyToOneCtrl.debounce || 1000} }"
@@ -387,13 +465,12 @@
                   {{manyToOneCtrl.loadingText}}
                 </div>
                 <span ng-hide="true" id="match-${manyToOneCtrl.field}-${$attrs.value}"></span>
-                <div class="input-group-btn input-group-btn-icon" style="position: absolute; right: 25px;" ng-show="(manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()">
+                <div class="input-group-btn input-group-btn-icon" style="position: absolute; right: {{manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton() ? '25px;' : '55px;'}};" ng-show="(manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()">
                   <button type="button" style="z-index: 9;" class="left-button btn btn-default gmd" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton()" ng-click="manyToOneCtrl.clearModel()">
                     <i ng-show="manyToOneCtrl.useGumgaLayout()" class="material-icons" style="font-size: 15px;">close</i>
                     <i ng-show="!manyToOneCtrl.useGumgaLayout()" class="glyphicon glyphicon-remove" style="font-size: 15px;"></i>
                   </button>
                   <button type="button" class="btn btn-default gmd"
-                          ng-show="manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton()"
                           style="padding-bottom: 7px;"
                           ng-click="manyToOneCtrl.openTypehead()">
                     <span class="caret"></span>                    
