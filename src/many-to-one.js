@@ -323,8 +323,6 @@
             }
 
             manyToOneCtrl.favorite = ($event, model) => {
-              $event.stopPropagation();
-              $event.preventDefault();
               if(angular.equals(model, manyToOneCtrl.favoriteModel)){
                 eraseCookie(getKeyCookie());
                 delete manyToOneCtrl.favoriteModel;
@@ -337,6 +335,14 @@
             manyToOneCtrl.isFavorite = model => {
               return angular.equals(model, manyToOneCtrl.favoriteModel);
             }
+
+            manyToOneCtrl.inputBlur = (event) => {
+              delete manyToOneCtrl.noResults;
+              if(!manyToOneCtrl.value){
+                ngModelCtrl.$viewValue = '';
+                ngModelCtrl.$render();
+              }
+            };
 
             /*  */
             let baseTemplate = `
@@ -441,6 +447,7 @@
                          ng-disabled="manyToOneCtrl.disabled"
                          ng-readonly="manyToOneCtrl.readonly"
                          ng-model="manyToOneCtrl.value"
+                         ng-blur="manyToOneCtrl.inputBlur($event)"
                          onfocus="this.classList.add('focused')"
                          ng-class="{'size-25' : manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton(), 'size-55' : !(manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton())}"
                          ng-keyup="manyToOneCtrl.keyUp($event)"
@@ -454,9 +461,9 @@
                          typeahead-show-hint="true"
                          typeahead-min-length="0"
                          typeahead-on-select="manyToOneCtrl.afterSelect($item, $model, $label, $event, 'isNotButton', manyToOneCtrl.match)"
-                         typeahead-no-results="noResults"
+                         typeahead-no-results="manyToOneCtrl.noResults"
                          autocomplete="off"/>
-                         <div ng-show="noResults" style="position: absolute; left: 0; width: 100%; top: 34px; background: #FFF; z-index: 999; padding: 15px; border-top: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.175);">
+                         <div ng-show="manyToOneCtrl.noResults" style="position: absolute; left: 0; width: 100%; top: 34px; background: #FFF; z-index: 999; padding: 15px; border-top: 1px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.175);">
                           {{${manyToOneCtrl.messageNoResult} || 'Nenhum resultado foi encontrado.'}}
                          </div>
                   <input type="text" ng-keyup="manyToOneCtrl.showTypeheadAndHideMatch()" ng-model="manyToOneCtrl.inputMatchValue" class="form-control" ng-show="manyToOneCtrl.visible == 'inputMatchValue'"/>
