@@ -344,6 +344,13 @@
               }
             };
 
+            manyToOneCtrl.inputClick = () => {
+              if(!manyToOneCtrl.value){
+                $element.find('input').blur();
+                manyToOneCtrl.openTypehead()
+              }
+            }
+
             /*  */
             let baseTemplate = `
             <style>
@@ -444,6 +451,7 @@
                          id="typeahead-${manyToOneCtrl.field}-${$attrs.value}"
                          class="form-control gmd inputahead"
                          tabindex="${manyToOneCtrl.tabSeq}"
+                         ng-click="manyToOneCtrl.inputClick()"
                          ng-disabled="manyToOneCtrl.disabled"
                          ng-readonly="manyToOneCtrl.readonly"
                          ng-model="manyToOneCtrl.value"
