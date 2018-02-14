@@ -291,9 +291,9 @@
 
             // POR FAVOR NAO REMOVE ESSA FUNÇÃO ELA É ESSENCIAL
             manyToOneCtrl.keyUp = ($event) => {
-              if($event.target.value == ''){
-                // angular.element($event.target).blur();
-                // $timeout(() => angular.element($event.target).focus(), 500);
+              if($event.target.value == '' && $event.keyCode != 40 && $event.keyCode != 38){
+                angular.element($event.target).blur();
+                $timeout(() => angular.element($event.target).focus(), 500);
               }
             }
 
