@@ -386,7 +386,7 @@
                 cursor: pointer; 
               }
               gumga-many-to-one .input-group button.btn[ng-click="manyToOneCtrl.openTypehead()"]{
-                z-index: 9;
+                z-index: 2;
               }
               gumga-many-to-one .progress {
                 max-width: 100%;
@@ -484,7 +484,7 @@
                 </div>
                 <span ng-hide="true" id="match-${manyToOneCtrl.field}-${$attrs.value}"></span>
                 <div class="input-group-btn input-group-btn-icon" style="position: absolute; right: {{manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton() ? '25px;' : manyToOneCtrl.displayInfo ? '87px' : '55px'}};" ng-show="(manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()">
-                  <button type="button" style="z-index: 9;" class="left-button btn btn-default gmd" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton()" ng-click="manyToOneCtrl.clearModel()">
+                  <button type="button" style="z-index: 2;" class="left-button btn btn-default gmd" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton()" ng-click="manyToOneCtrl.clearModel()">
                     <i ng-show="manyToOneCtrl.useGumgaLayout()" class="material-icons" style="font-size: 15px;">close</i>
                     <i ng-show="!manyToOneCtrl.useGumgaLayout()" class="glyphicon glyphicon-remove" style="font-size: 15px;"></i>
                   </button>
