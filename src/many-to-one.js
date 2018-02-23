@@ -192,6 +192,7 @@
             }
 
             function openTypehead(){
+              manyToOneCtrl.opened = true;
               if(manyToOneCtrl.value){
                 delete manyToOneCtrl.value;
                 showTypeheadAndHideMatch();
@@ -237,6 +238,7 @@
             }
 
             function afterSelect($item, $model, $label, $event, isBtn, match){
+              delete manyToOneCtrl.opened;
               handlingInputVisible();
               if(!$model.id && manyToOneCtrl.authorizeAdd) {
                 manyToOneCtrl.proxySave($model, isBtn);
@@ -337,6 +339,7 @@
             }
 
             manyToOneCtrl.inputBlur = (event) => {
+              delete manyToOneCtrl.opened;
               delete manyToOneCtrl.noResults;
               if(!manyToOneCtrl.value){
                 ngModelCtrl.$viewValue = '';
@@ -345,9 +348,11 @@
             };
 
             manyToOneCtrl.inputClick = () => {
+              if(manyToOneCtrl.typeaheadLoading || manyToOneCtrl.opened) return;
               if(!manyToOneCtrl.value){
                 $element.find('input').blur();
                 manyToOneCtrl.openTypehead();
+                $element.find('input').focus();
               }
             }
 
@@ -386,7 +391,7 @@
                 cursor: pointer; 
               }
               gumga-many-to-one .input-group button.btn[ng-click="manyToOneCtrl.openTypehead()"]{
-                z-index: 2;
+                z-index: 3;
               }
               gumga-many-to-one .progress {
                 max-width: 100%;
@@ -484,7 +489,7 @@
                 </div>
                 <span ng-hide="true" id="match-${manyToOneCtrl.field}-${$attrs.value}"></span>
                 <div class="input-group-btn input-group-btn-icon" style="position: absolute; right: {{manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton() ? '25px;' : manyToOneCtrl.displayInfo ? '87px' : '55px'}};" ng-show="(manyToOneCtrl.displayInfoButton() && manyToOneCtrl.modelValueIsObject()) || manyToOneCtrl.displayClearButton()">
-                  <button type="button" style="z-index: 2;" class="left-button btn btn-default gmd" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton()" ng-click="manyToOneCtrl.clearModel()">
+                  <button type="button" style="z-index: 3;" class="left-button btn btn-default gmd" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayClearButton()" ng-click="manyToOneCtrl.clearModel()">
                     <i ng-show="manyToOneCtrl.useGumgaLayout()" class="material-icons" style="font-size: 15px;">close</i>
                     <i ng-show="!manyToOneCtrl.useGumgaLayout()" class="glyphicon glyphicon-remove" style="font-size: 15px;"></i>
                   </button>
@@ -493,7 +498,7 @@
                           ng-click="manyToOneCtrl.openTypehead()">
                     <span class="caret"></span>                    
                   </button>
-                  <button type="button" style="z-index: 9;" class="left-button btn btn-default gmd" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayInfoButton()" ng-disabled="manyToOneCtrl.disabledDisplayInfo()" ng-click="manyToOneCtrl.openInfo(manyToOneCtrl.value, $event)">
+                  <button type="button" style="z-index: 3;" class="left-button btn btn-default gmd" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayInfoButton()" ng-disabled="manyToOneCtrl.disabledDisplayInfo()" ng-click="manyToOneCtrl.openInfo(manyToOneCtrl.value, $event)">
                     <i class="material-icons" style="font-size: 15px;">remove_red_eye</i>
                   </button>
                 </div>
