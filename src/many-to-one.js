@@ -21,7 +21,7 @@
             let template = false;
 
             let cache = getCookie(getKeyCookie());
-            
+
             if(cache){
               manyToOneCtrl.favoriteModel = JSON.parse(cache);
             }
@@ -320,8 +320,8 @@
                 return null;
             }
 
-            function eraseCookie(name) {   
-                document.cookie = name+'=; Max-Age=-99999999;';  
+            function eraseCookie(name) {
+                document.cookie = name+'=; Max-Age=-99999999;';
             }
 
             manyToOneCtrl.favorite = ($event, model) => {
@@ -388,7 +388,7 @@
                 color: #d9d90d;
               }
               gumga-many-to-one i.favorite:hover{
-                cursor: pointer; 
+                cursor: pointer;
               }
               gumga-many-to-one .input-group button.btn[ng-click="manyToOneCtrl.openTypehead()"]{
                 z-index: 3;
@@ -429,7 +429,7 @@
               gumga-many-to-one .indeterminate:after {
                 animation: indeterminate 3s cubic-bezier(0.9, -0.59, 0.715, 1.045) infinite;
               }
-              
+
               @keyframes indeterminate {
                 0% {
                   width: 0%;
@@ -496,7 +496,7 @@
                   <button type="button" class="btn btn-default gmd"
                           style="padding-bottom: 7px;"
                           ng-click="manyToOneCtrl.openTypehead()">
-                    <span class="caret"></span>                    
+                    <span class="caret"></span>
                   </button>
                   <button type="button" style="z-index: 3;" class="left-button btn btn-default gmd" ng-show="!manyToOneCtrl.modelValueIsObject() && manyToOneCtrl.displayInfoButton()" ng-disabled="manyToOneCtrl.disabledDisplayInfo()" ng-click="manyToOneCtrl.openInfo(manyToOneCtrl.value, $event)">
                     <i class="material-icons" style="font-size: 15px;">remove_red_eye</i>
@@ -519,14 +519,14 @@
                   <i class="material-icons" style="font-size: 17px; vertical-align: middle; padding-top: 5px;">remove_red_eye</i>
                 </span>
                 <span style="float: right;" ng-show="$parent.$parent.$parent.$parent.manyToOneCtrl.activeFavorite">
-                  <i ng-show="!$parent.$parent.$parent.$parent.manyToOneCtrl.isFavorite(match.model)" 
+                  <i ng-show="!$parent.$parent.$parent.$parent.manyToOneCtrl.isFavorite(match.model)"
                      title="Favoritar"
-                     ng-click="$parent.$parent.$parent.$parent.manyToOneCtrl.favorite($event, match.model)" 
+                     ng-click="$parent.$parent.$parent.$parent.manyToOneCtrl.favorite($event, match.model)"
                      class="material-icons favorite">star_border</i>
 
                   <i ng-show="$parent.$parent.$parent.$parent.manyToOneCtrl.isFavorite(match.model)"
-                     title="Favoritar" 
-                     ng-click="$parent.$parent.$parent.$parent.manyToOneCtrl.favorite($event, match.model)" 
+                     title="Favoritar"
+                     ng-click="$parent.$parent.$parent.$parent.manyToOneCtrl.favorite($event, match.model)"
                      class="material-icons favorite full">star</i>
                 </span>
               </span>
@@ -534,13 +534,19 @@
             </a>
             `
 
-            $templateCache.put(`manyToOneTemplate${manyToOneCtrl.field}-${$attrs.value}.html`, templateForMatch)
+            $templateCache.put(`manyToOneTemplate${manyToOneCtrl.field}-${$attrs.value}.html`, templateForMatch);
+
+
+            const getFormController = (scope, formName) => {
+              if(scope[formName]) return scope[formName];
+              if(scope.$parent) return getFormController(scope.$parent, formName);
+            }
 
             let element = angular.element(baseTemplate),
                 input   = element.find('input'),
                 form    = $element.parent()
             while(form[0].nodeName != 'FORM') form = form.parent();
-            let formController = $scope.$parent[form.attr('name')]
+            let formController = getFormController($scope,form.attr('name'));
 
             $element.append($compile(element)($scope))
 
