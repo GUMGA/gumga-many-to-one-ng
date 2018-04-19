@@ -644,7 +644,7 @@
                   </button>
                 </div>
               </div>
-              <div ng-style="manyToOneCtrl.getRegisterStyle()" class="register-container" ng-show="!manyToOneCtrl.value && (manyToOneCtrl.opened || manyToOneCtrl.isOpenTyp()) && manyToOneCtrl.lastParam">
+              <div ng-style="manyToOneCtrl.getRegisterStyle()" class="register-container" ng-show="manyToOneCtrl.templateRegister && !manyToOneCtrl.value && (manyToOneCtrl.opened || manyToOneCtrl.isOpenTyp()) && manyToOneCtrl.lastParam">
                 ${ manyToOneCtrl.templateRegister }
               </div>
             </div>`
