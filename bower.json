@@ -1,7 +1,11 @@
 {
   "name": "gumga-many-to-one-ng",
   "description": "Gumga Many To One Ng",
+<<<<<<< HEAD
   "version": "1.11.0",
+=======
+  "version": "1.10.7",
+>>>>>>> master
   "main": "./src/many-to-one.js",
   "authors": [
     "Gumga Tecnologia da Informação S/A"
