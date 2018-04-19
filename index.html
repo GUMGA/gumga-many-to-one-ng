@@ -15,51 +15,43 @@
   <div class="container gumga-layout">
     <br><br><br>
     <div class="row">
-      <div class="panel gmd">
+      <div class="panel gmd" style="height: 600px;">
         <div class="panel-body">
           <form name="Example">
+            <div class="col-md-3"></div>
             <div class="col-md-6">
-              {{produto}}
 
-
-              <!-- label -->
-              <gmd-input>
-                <gumga-many-to-one
-                  value="produto"
-                  class="gmd"
+              <gumga-many-to-one
+                  value="produto2"
+                  class="gmd striped"                  
                   list="pessoas.data"
-                  search-method="pessoas.methods.asyncSearch('name', param)"
-                  name="teste"
+                  infinity-pagination="true"
+                  search-method="pessoas.methods.searchWithPagination('name', param, pageSize, page)"
+                  name="teste2"
                   required
                   field="name"
-                  authorize-add="false"
+                  authorize-add="true"
                   active-favorite="true"
                   async="true"
+                  on-register-click="teste(param)"
                   display-info="true">
                   <match>
                     <div>{{match.model.name}}</div>
                   </match>
+                  <gmto-register>
+                    <gmto-register-label>
+                      Nenhum dos <b> {{ $value }} </b> listado é o que procura?
+                    </gmto-register-label>
+                    <gmto-register-button>
+                      Cadastre
+                    </gmto-register-button>
+                  </gmto-register>
                 </gumga-many-to-one>
-              </gmd-input>
 
-            </div>
-            <div class="col-md-6">
-              <gmd-select ng-model="example.select"
-                          placeholder="Funcionário">
-                <gmd-option-empty>
-                  Nenhum
-                </gmd-option-empty>
-                <gmd-option ng-repeat="option in options"
-                            ng-value="option"
-                            ng-label="option.name">
-                  {{option.name}}
-                </gmd-option>
-              </gmd-select>
             </div> 
 
             <br><br><br><br>
 
-              <input type="text"/> 
 
           </form>
         </div>
@@ -74,7 +66,7 @@
   <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
   <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
   <script src="node_modules/gumga-rest-ng/dist/gumga-rest.js"></script>
-  <script src="node_modules/gumga-controller-ng/dist/gumga-controller.js"></script>
+  <script src="node_modules/gumga-controller-ng/dist/gumga-controller.min.js"></script>
   <script src="node_modules/gumga-form-ng/dist/gumga-form.js"></script>
   <script src="dist/gumga-many-to-one.js"></script>
 
@@ -102,10 +94,11 @@
           // $scope.pessoas.methods.get();
 
   
-
+          $scope.teste = (nome) => {
+            console.log('Salvar: ', nome);
+          }
 
           $scope.asyncSearch = function (param) {
-            console.log(param);
             $scope.pessoas.methods.asyncSearch('name', param)
           }
 
