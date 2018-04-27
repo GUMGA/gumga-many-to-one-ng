@@ -415,6 +415,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         var observeClickBtnRegister = function observeClickBtnRegister() {
           $element.find('gmto-register-button').click(function (evt) {
+            evt.stopPropagation();
             manyToOneCtrl.onRegisterClick({ param: manyToOneCtrl.lastParam });
           });
         };
@@ -492,12 +493,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
 
         manyToOneCtrl.inputBlur = function (event) {
-          delete manyToOneCtrl.opened;
-          delete manyToOneCtrl.noResults;
-          if (!manyToOneCtrl.value) {
-            ngModelCtrl.$viewValue = '';
-            ngModelCtrl.$render();
-          }
+          $timeout(function () {
+            delete manyToOneCtrl.opened;
+            delete manyToOneCtrl.noResults;
+            if (!manyToOneCtrl.value) {
+              ngModelCtrl.$viewValue = '';
+              ngModelCtrl.$render();
+            }
+          }, 200);
         };
 
         manyToOneCtrl.inputFocus = function (event) {

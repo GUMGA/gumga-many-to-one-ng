@@ -351,6 +351,7 @@
 
         const observeClickBtnRegister = () => {
           $element.find('gmto-register-button').click((evt) => {
+            evt.stopPropagation();
             manyToOneCtrl.onRegisterClick({ param: manyToOneCtrl.lastParam });
           });
         }
@@ -425,12 +426,14 @@
         }
 
         manyToOneCtrl.inputBlur = (event) => {
-          delete manyToOneCtrl.opened;
-          delete manyToOneCtrl.noResults;
-          if (!manyToOneCtrl.value) {
-            ngModelCtrl.$viewValue = '';
-            ngModelCtrl.$render();
-          }
+          $timeout(() => {
+            delete manyToOneCtrl.opened;
+            delete manyToOneCtrl.noResults;
+            if (!manyToOneCtrl.value) {
+              ngModelCtrl.$viewValue = '';
+              ngModelCtrl.$render();
+            }
+          }, 200);
         };
 
         manyToOneCtrl.inputFocus = (event) => {
