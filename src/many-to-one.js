@@ -112,7 +112,7 @@
           }
           if (!manyToOneCtrl.async) {
             if (param) param = param.toLowerCase();
-            return manyToOneCtrl.list.filter(listItem => {
+            manyToOneCtrl.typeData = manyToOneCtrl.list.filter(listItem => {
               return listItem[manyToOneCtrl.field].toLowerCase().indexOf(param) != -1;
             })
           } else {

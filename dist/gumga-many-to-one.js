@@ -203,7 +203,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
           if (!manyToOneCtrl.async) {
             if (param) param = param.toLowerCase();
-            return manyToOneCtrl.list.filter(function (listItem) {
+            manyToOneCtrl.typeData = manyToOneCtrl.list.filter(function (listItem) {
               return listItem[manyToOneCtrl.field].toLowerCase().indexOf(param) != -1;
             });
           } else {
