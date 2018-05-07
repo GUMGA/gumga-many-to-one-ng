@@ -444,11 +444,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
               return angular.element($event.target).focus();
             });
           }
-          manyToOneCtrl.keyDebounce = $timeout(function () {
-            manyToOneCtrl.page = 1;
-            manyToOneCtrl.lastArray = [];
+          if (manyToOneCtrl.async) {
+            manyToOneCtrl.keyDebounce = $timeout(function () {
+              manyToOneCtrl.page = 1;
+              manyToOneCtrl.lastArray = [];
+              manyToOneCtrl.proxySearch($event.target.value);
+            }, manyToOneCtrl.async ? manyToOneCtrl.debounce || 1000 : 0);
+          } else {
             manyToOneCtrl.proxySearch($event.target.value);
-          }, manyToOneCtrl.debounce || 1000);
+          }
         };
 
         function setCookie(name, value, days) {

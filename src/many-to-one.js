@@ -114,7 +114,7 @@
             if (param) param = param.toLowerCase();
             manyToOneCtrl.typeData = manyToOneCtrl.list.filter(listItem => {
               return listItem[manyToOneCtrl.field].toLowerCase().indexOf(param) != -1;
-            })
+            });
           } else {
             manyToOneCtrl.typeaheadLoading = true;
             manyToOneCtrl.lastParam = param;
@@ -378,11 +378,15 @@
             angular.element($event.target).blur();
             $timeout(() => angular.element($event.target).focus());
           }
-          manyToOneCtrl.keyDebounce = $timeout(() => {
-            manyToOneCtrl.page = 1;
-            manyToOneCtrl.lastArray = [];
+          if (manyToOneCtrl.async) {
+            manyToOneCtrl.keyDebounce = $timeout(() => {
+              manyToOneCtrl.page = 1;
+              manyToOneCtrl.lastArray = [];
+              manyToOneCtrl.proxySearch($event.target.value);
+            }, (manyToOneCtrl.async ? (manyToOneCtrl.debounce || 1000) : 0));
+          } else {
             manyToOneCtrl.proxySearch($event.target.value);
-          }, manyToOneCtrl.debounce || 1000);
+          }          
         }
 
         function setCookie(name, value, days) {
