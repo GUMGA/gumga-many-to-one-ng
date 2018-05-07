@@ -24,14 +24,14 @@
               <gumga-many-to-one
                   value="produto2"
                   class="gmd striped"                  
-                  list="options"
-                  search-method="options('name', param, pageSize, page)"
+                  list="pessoas.data"
+                  search-method="pessoas.methods.searchWithPagination('name', param, pageSize, page)"
                   name="pessoas"
                   required
                   field="name"
                   authorize-add="true"
                   active-favorite="true"
-                  async="false"
+                  async="true"
                   on-register-click="teste(param)"
                   display-info="true">
                   <match>

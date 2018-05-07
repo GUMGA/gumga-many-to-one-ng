@@ -17,6 +17,10 @@
         $scope.$value = value;
       });
 
+      $scope.$watch('manyToOneCtrl.typeData', (value) => {
+        $scope.$list = value;
+      });
+
       const infiniteScroll = () => {
         manyToOneCtrl.infiniteDisabled = true;
         manyToOneCtrl.page++;

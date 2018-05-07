@@ -96,6 +96,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         $scope.$value = value;
       });
 
+      $scope.$watch('manyToOneCtrl.typeData', function (value) {
+        $scope.$list = value;
+      });
+
       var infiniteScroll = function infiniteScroll() {
         manyToOneCtrl.infiniteDisabled = true;
         manyToOneCtrl.page++;
