@@ -24,8 +24,8 @@
               <gumga-many-to-one
                   value="produto2"
                   class="gmd striped"                  
-                  list="pessoas.data"
-                  search-method="pessoas.methods.searchWithPagination('name', param, pageSize, page)"
+                  list="pessoas"
+                  search-method="asyncSearch(param)"
                   name="pessoas"
                   required
                   field="name"
@@ -45,6 +45,25 @@
                       Cadastre
                     </gmto-register-button>
                   </gmto-register>
+                </gumga-many-to-one>
+
+                <br><br><br><br>
+
+                <gumga-many-to-one
+                  value="produto3"
+                  class="gmd striped"                  
+                  list="pessoas222"
+                  name="pessoass"
+                  required
+                  field="name"
+                  authorize-add="true"
+                  active-favorite="true"
+                  async="false"
+                  on-register-click="teste(param)"
+                  display-info="true">
+                  <match>
+                    <div>{{match.model.name}}</div>
+                  </match>
                 </gumga-many-to-one>
 
             </div> 
@@ -98,8 +117,23 @@
           }
 
           $scope.asyncSearch = function (param) {
-            $scope.pessoas.methods.asyncSearch('name', param)
+            return $http.get('https://jsonplaceholder.typicode.com/users?q=' + param).then((data) => {
+              return {
+                data: {
+                  values: data.data
+                }
+              }
+            })
           }
+
+          $scope.pessoas222 = [
+            {
+              name: 'Mateus'
+            },
+            {
+              name: 'Mateus Miranda'
+            }
+          ]
 
           // $scope.getSearch = function (param) {
           //   return $q(function (resolve) {

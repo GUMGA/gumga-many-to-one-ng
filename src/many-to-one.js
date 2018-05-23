@@ -124,7 +124,7 @@
             manyToOneCtrl.lastParam = param;
             manyToOneCtrl.searchMethod({ param, pageSize, page }).then((resp) => {
               let data = resp.data && resp.data.values && Array.isArray(resp.data.values) ? resp.data.values : resp;  
-              
+     
               if(manyToOneCtrl.infinityPagination){
                 if(page > 1){
                   data = manyToOneCtrl.lastArray.concat(data);
@@ -674,12 +674,12 @@
                   <i class="material-icons" style="font-size: 17px; vertical-align: middle; padding-top: 5px;">remove_red_eye</i>
                 </span>
                 <span style="float: right;" ng-show="$parent.$parent.$parent.$parent.manyToOneCtrl.activeFavorite">
-                  <i ng-show="!$parent.$parent.$parent.$parent.manyToOneCtrl.isFavorite(match.model) && match.model.id" 
+                  <i ng-show="!$parent.$parent.$parent.$parent.manyToOneCtrl.isFavorite(match.model)" 
                      title="Favoritar"
                      ng-click="$parent.$parent.$parent.$parent.manyToOneCtrl.favorite($event, match.model)" 
                      class="material-icons favorite">star_border</i>
 
-                  <i ng-show="$parent.$parent.$parent.$parent.manyToOneCtrl.isFavorite(match.model) && match.model.id"
+                  <i ng-show="$parent.$parent.$parent.$parent.manyToOneCtrl.isFavorite(match.model)"
                      title="Favoritar" 
                      ng-click="$parent.$parent.$parent.$parent.manyToOneCtrl.favorite($event, match.model)" 
                      class="material-icons favorite full">star</i>
