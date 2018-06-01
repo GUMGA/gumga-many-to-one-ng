@@ -241,7 +241,7 @@
           let user = sessionStorage.getItem('user');
           if (user) {
             user = JSON.parse(user);
-            return (user.instanceOrganizationHierarchyCode || '') + 'favorite-' + $attrs.name;
+            return (user.organizationHierarchyCode || '') + 'favorite-' + $attrs.name;
           } else {
             return 'favorite-' + $attrs.name;
           }
