@@ -114,11 +114,21 @@
           if(!byInfinity && manyToOneCtrl.lastParam == param){
             return;
           }
+          if (manyToOneCtrl.value && typeof manyToOneCtrl.value === 'object') {
+            return;
+          }
           if (!manyToOneCtrl.async) {
             if (param) param = param.toLowerCase();
-            manyToOneCtrl.typeData = manyToOneCtrl.list.filter(listItem => {
+            manyToOneCtrl.lastParam = param;
+            let data = manyToOneCtrl.list.filter(listItem => {
               return listItem[manyToOneCtrl.field].toLowerCase().indexOf(param) != -1;
             });
+            $timeout(() => {
+              manyToOneCtrl.typeData = data;
+              manyToOneCtrl.ngModelCtrl.$viewValue = "";
+              manyToOneCtrl.inputElm[0].dispatchEvent(new Event('focus'));
+              manyToOneCtrl.ngModelCtrl.$viewValue = param;
+            })
           } else {
             manyToOneCtrl.typeaheadLoading = true;
             manyToOneCtrl.lastParam = param;

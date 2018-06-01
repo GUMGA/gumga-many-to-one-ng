@@ -205,10 +205,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           if (!byInfinity && manyToOneCtrl.lastParam == param) {
             return;
           }
+          if (manyToOneCtrl.value && _typeof(manyToOneCtrl.value) === 'object') {
+            return;
+          }
           if (!manyToOneCtrl.async) {
             if (param) param = param.toLowerCase();
-            manyToOneCtrl.typeData = manyToOneCtrl.list.filter(function (listItem) {
+            manyToOneCtrl.lastParam = param;
+            var data = manyToOneCtrl.list.filter(function (listItem) {
               return listItem[manyToOneCtrl.field].toLowerCase().indexOf(param) != -1;
+            });
+            $timeout(function () {
+              manyToOneCtrl.typeData = data;
+              manyToOneCtrl.ngModelCtrl.$viewValue = "";
+              manyToOneCtrl.inputElm[0].dispatchEvent(new Event('focus'));
+              manyToOneCtrl.ngModelCtrl.$viewValue = param;
             });
           } else {
             manyToOneCtrl.typeaheadLoading = true;
