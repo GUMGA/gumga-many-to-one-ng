@@ -551,15 +551,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             form = $element.parent();
         while (form[0].nodeName != 'FORM') {
           form = form.parent();
-        }var formController = $scope.$parent[form.attr('name')];
-
-        $element.append($compile(element)($scope));
+        }$element.append($compile(element)($scope));
 
         ngModelCtrl = input.controller('ngModel');
         ngModelCtrlReset = angular.copy(ngModelCtrl);
         manyToOneCtrl.ngModelCtrl = ngModelCtrl;
         manyToOneCtrl.inputElm = input;
-        formController.$addControl(ngModelCtrl);
 
         ngModelCtrl.$validators.manyToOne = function (modelValue, viewValue) {
           return modelValue ? !(typeof modelValue === 'string' || modelValue instanceof String) : true;

@@ -705,7 +705,6 @@
           input = element.find('input'),
           form = $element.parent()
         while (form[0].nodeName != 'FORM') form = form.parent();
-        let formController = $scope.$parent[form.attr('name')]
 
         $element.append($compile(element)($scope))
 
@@ -713,7 +712,6 @@
         ngModelCtrlReset = angular.copy(ngModelCtrl)
         manyToOneCtrl.ngModelCtrl = ngModelCtrl;
         manyToOneCtrl.inputElm = input;
-        formController.$addControl(ngModelCtrl);
 
         ngModelCtrl.$validators.manyToOne = (modelValue, viewValue) => {
           return modelValue ? !(typeof modelValue === 'string' || modelValue instanceof String) : true
