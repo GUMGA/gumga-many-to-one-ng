@@ -10,8 +10,15 @@
       let manyToOneCtrl = this, ngModelCtrl, ngModelCtrlReset;
 
       manyToOneCtrl.withStriped = $element.hasClass('striped');
-      
+
       manyToOneCtrl.page = 1;
+
+      $element.bind('keydown', function (evt) {
+        if (evt.which === 40 || evt.which === 38) {
+          const li = $element.find('ul.dropdown-menu li.active');
+          $element.find('ul.dropdown-menu')[0].scrollTop = (li.index()) * li.find('a').height();
+        }
+      });
 
       $scope.$watch('manyToOneCtrl.lastParam', (value) => {
         $scope.$value = value;
@@ -32,7 +39,7 @@
           const elm = $element.find('ul[uib-typeahead-popup]');
           angular.element(elm).scroll((evt) => {
             let disabled = manyToOneCtrl.hasOwnProperty('infiniteDisabled') ? manyToOneCtrl.infiniteDisabled : false;
-            if (elm.scrollTop() + elm.innerHeight() >= elm[0].scrollHeight && !disabled){
+            if (elm.scrollTop() + elm.innerHeight() >= elm[0].scrollHeight && !disabled) {
               infiniteScroll();
             }
           });
@@ -111,7 +118,7 @@
         manyToOneCtrl.typeData = [];
 
         manyToOneCtrl.proxySearch = (param = '', pageSize = 10, page = 1, byInfinity) => {
-          if(!byInfinity && manyToOneCtrl.lastParam == param){
+          if (!byInfinity && manyToOneCtrl.lastParam == param) {
             return;
           }
           if (manyToOneCtrl.value && typeof manyToOneCtrl.value === 'object') {
@@ -133,21 +140,21 @@
             manyToOneCtrl.typeaheadLoading = true;
             manyToOneCtrl.lastParam = param;
             manyToOneCtrl.searchMethod({ param, pageSize, page }).then((resp) => {
-              let data = resp.data && resp.data.values && Array.isArray(resp.data.values) ? resp.data.values : resp;  
-     
-              if(manyToOneCtrl.infinityPagination){
-                if(page > 1){
+              let data = resp.data && resp.data.values && Array.isArray(resp.data.values) ? resp.data.values : resp;
+
+              if (manyToOneCtrl.infinityPagination) {
+                if (page > 1) {
                   data = manyToOneCtrl.lastArray.concat(data);
                 }
                 manyToOneCtrl.lastArray = angular.copy(data);
               }
-              
+
               if (param && !manyToOneCtrl.infinityPagination && manyToOneCtrl.authorizeAdd) {
                 let objToAppend = {};
                 objToAppend[manyToOneCtrl.field] = manyToOneCtrl.valueToAdd;
                 data = data.concat(objToAppend)
               }
-              
+
               $timeout(() => {
                 manyToOneCtrl.typeaheadLoading = false;
                 manyToOneCtrl.infiniteDisabled = false;
@@ -217,8 +224,8 @@
         }
 
         manyToOneCtrl.getRegisterStyle = () => {
-          const height = manyToOneCtrl.inputElm.height() + 
-                        $element.find('ul.dropdown-menu[uib-typeahead-popup]').height();
+          const height = manyToOneCtrl.inputElm.height() +
+            $element.find('ul.dropdown-menu[uib-typeahead-popup]').height();
           return {
             top: height + 18
           };
@@ -384,8 +391,8 @@
         })
 
         manyToOneCtrl.keyUp = ($event) => {
-          if(manyToOneCtrl.keyDebounce){
-            $timeout.cancel( manyToOneCtrl.keyDebounce );
+          if (manyToOneCtrl.keyDebounce) {
+            $timeout.cancel(manyToOneCtrl.keyDebounce);
           }
           if ($event.target.value == '' && $event.keyCode != 40 && $event.keyCode != 38 && manyToOneCtrl.lastValue != $event.target.value) {
             manyToOneCtrl.lastValue = $event.target.value;
@@ -400,7 +407,7 @@
             }, (manyToOneCtrl.async ? (manyToOneCtrl.debounce || 1000) : 0));
           } else {
             manyToOneCtrl.proxySearch($event.target.value);
-          }          
+          }
         }
 
         function setCookie(name, value, days) {
@@ -666,7 +673,7 @@
                 </div>
               </div>
               <div ng-style="manyToOneCtrl.getRegisterStyle()" class="register-container" ng-show="manyToOneCtrl.templateRegister && !manyToOneCtrl.value && (manyToOneCtrl.opened || manyToOneCtrl.isOpenTyp()) && manyToOneCtrl.lastParam">
-                ${ manyToOneCtrl.templateRegister }
+                ${ manyToOneCtrl.templateRegister}
               </div>
             </div>`
 

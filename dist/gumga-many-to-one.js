@@ -92,6 +92,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
       manyToOneCtrl.page = 1;
 
+      $element.bind('keydown', function (evt) {
+        if (evt.which === 40 || evt.which === 38) {
+          var li = $element.find('ul.dropdown-menu li.active');
+          $element.find('ul.dropdown-menu')[0].scrollTop = li.index() * li.find('a').height();
+        }
+      });
+
       $scope.$watch('manyToOneCtrl.lastParam', function (value) {
         $scope.$value = value;
       });
