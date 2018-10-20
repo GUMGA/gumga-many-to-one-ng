@@ -114,7 +114,7 @@
         manyToOneCtrl.afterSelect = afterSelect
         manyToOneCtrl.openTypehead = openTypehead
         manyToOneCtrl.showTypeheadAndHideMatch = showTypeheadAndHideMatch
-        manyToOneCtrl.minLetter = manyToOneCtrl.minLetter || 0; 
+        manyToOneCtrl.minLetter = manyToOneCtrl.minLetter || 0;
 
         manyToOneCtrl.typeData = [];
 
@@ -635,6 +635,7 @@
                          ng-disabled="manyToOneCtrl.disabled"
                          ng-readonly="manyToOneCtrl.readonly"
                          ng-model="manyToOneCtrl.value"
+                         ng-required="manyToOneCtrl.ngRequired"
                          ng-focus="manyToOneCtrl.inputFocus($event)"
                          ng-blur="manyToOneCtrl.inputBlur($event)"
                          onfocus="this.classList.add('focused')"
@@ -785,7 +786,8 @@
         tabSeq: '=?',
         async: '=?',
         infinityPagination: '=?',
-        debounce: '@?'
+        debounce: '@?',
+        ngRequired: '=?'
       },
       controllerAs: 'manyToOneCtrl',
       bindToController: true,
