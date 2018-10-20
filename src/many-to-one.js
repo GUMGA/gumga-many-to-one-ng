@@ -114,6 +114,7 @@
         manyToOneCtrl.afterSelect = afterSelect
         manyToOneCtrl.openTypehead = openTypehead
         manyToOneCtrl.showTypeheadAndHideMatch = showTypeheadAndHideMatch
+        manyToOneCtrl.minLetter = manyToOneCtrl.minLetter || 0; 
 
         manyToOneCtrl.typeData = [];
 
@@ -224,10 +225,15 @@
         }
 
         manyToOneCtrl.getRegisterStyle = () => {
-          const height = manyToOneCtrl.inputElm.height() +
-            $element.find('ul.dropdown-menu[uib-typeahead-popup]').height();
+          if (manyToOneCtrl.inputElm) {
+            const height = manyToOneCtrl.inputElm.height() +
+              $element.find('ul.dropdown-menu[uib-typeahead-popup]').height();
+            return {
+              top: height + 18
+            };
+          }
           return {
-            top: height + 18
+            top: 0
           };
         }
 
@@ -642,7 +648,7 @@
                          typeahead-is-open="manyToOneCtrl.isTypeaheadOpen"
                          typeahead-editable="${manyToOneCtrl.editable}"
                          typeahead-show-hint="true"
-                         typeahead-min-length="0"
+                         typeahead-min-length="manyToOneCtrl.minLetter"
                          typeahead-on-select="manyToOneCtrl.afterSelect($item, $model, $label, $event, 'isNotButton', manyToOneCtrl.match)"
                          typeahead-no-results="manyToOneCtrl.noResults"
                          autocomplete="off"/>
@@ -716,7 +722,7 @@
         $element.append($compile(element)($scope))
 
         ngModelCtrl = input.controller('ngModel')
-        ngModelCtrlReset = angular.copy(ngModelCtrl)
+        ngModelCtrlReset = ngModelCtrl
         manyToOneCtrl.ngModelCtrl = ngModelCtrl;
         manyToOneCtrl.inputElm = input;
 
@@ -760,6 +766,7 @@
       transclude: true,
       scope: {
         value: '=',
+        minLetter: '=?',
         loadingText: '@?',
         inputMatch: '@?',
         searchMethod: '&',

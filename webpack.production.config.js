@@ -12,7 +12,6 @@ module.exports = {
         filename: baseName + '.min.js'
     },
     plugins: [
-        new UglifyJSPlugin(),
         new ExtractTextPlugin({
             filename: baseName + ".min.css",
             allChunks: true
