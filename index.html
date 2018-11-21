@@ -1,76 +1,91 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="yourApp">
+<html lang="en"
+      ng-app="yourApp">
 
 <head>
   <title></title>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-    crossorigin="anonymous">
-    <link rel="stylesheet" href="https://gumga.github.io/layout/gumga-layout/gumga-layout.css">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+  <link rel="stylesheet"
+        href="https://gumga.github.io/layout/gumga-layout/gumga-layout.css">
 </head>
 
 <body ng-controller="manyToOneCtrl">
 
   <div class="container gumga-layout">
-    <br><br><br>
+    <br>
+    <br>
+    <br>
     <div class="row">
-      <div class="panel gmd" style="height: 600px;">
+      <div class="panel gmd"
+           style="height: 600px;">
         <div class="panel-body">
           <form name="Example">
             <div class="col-md-3"></div>
             <div class="col-md-6">
 
-              <gumga-many-to-one
-                  value="produto2"
-                  class="gmd striped"                  
-                  list="pessoas"
-                  search-method="asyncSearch(param)"
-                  name="pessoas"
-                  required
-                  field="name"
-                  min-letter="2"
-                  ng-required="true"
-                  authorize-add="false"
-                  active-favorite="true"
-                  async="true"
-                  on-register-click="teste(param)"
-                  display-info="true">
-                  <match>
-                    <div>{{match.model.name}}</div>
-                  </match>
-                  <gmto-register>
-                    <gmto-register-label>
-                      Nenhum dos <b> {{ $value }} </b> listado é o que procura?
-                    </gmto-register-label>
-                    <gmto-register-button>
-                      Cadastre
-                    </gmto-register-button>
-                  </gmto-register>
-                </gumga-many-to-one>
+              <gumga-many-to-one value="produto2"
+                                 class="gmd striped"
+                                 list="pessoas"
+                                 search-method="asyncSearch(param)"
+                                 name="pessoas"
+                                 required
+                                 field="name"
+                                 min-letter="2"
+                                 ng-required="true"
+                                 authorize-add="false"
+                                 active-favorite="true"
+                                 async="true"
+                                 on-register-click="teste(param)"
+                                 display-info="true">
+                <match>
+                  <div>{{match.model.name}}</div>
+                </match>
+                <gmto-register>
+                  <gmto-register-label>
+                    Nenhum dos
+                    <b> {{ $value }} </b> listado é o que procura?
+                  </gmto-register-label>
+                  <gmto-register-button>
+                    Cadastre
+                  </gmto-register-button>
+                </gmto-register>
+              </gumga-many-to-one>
 
-                <br><br><br><br>
+              <br>
+              <br>
+              <br>
+              <br>
 
-                <gumga-many-to-one
-                  value="produto3"
-                  class="gmd striped"                  
-                  list="pessoas222"
-                  name="pessoass"
-                  required
-                  field="name"
-                  authorize-add="false"
-                  active-favorite="true"
-                  async="false"
-                  on-register-click="teste(param)"
-                  display-info="true">
-                  <match>
-                    <div>{{match.model.name}}</div>
-                  </match>
-                </gumga-many-to-one>
+              <gumga-many-to-one value="produto3"
+                                 class="gmd striped"
+                                 list="pessoas222"
+                                 name="pessoass"
+                                 ng-focus="focusInput"
+                                 ng-blur="blurInput"
+                                 required
+                                 field="name"
+                                 authorize-add="false"
+                                 active-favorite="true"
+                                 async="false"
+                                 on-register-click="teste(param)"
+                                 display-info="true">
+                <match>
+                  <div>{{match.model.name}}</div>
+                </match>
+              </gumga-many-to-one>
 
-            </div> 
+            </div>
 
-            <br><br><br><br>
+            <br>
+            <br>
+            <br>
+            <br>
 
 
           </form>
@@ -103,6 +118,13 @@
             { name: 'Augusto Carniel', id: 2 }
           ]
 
+          $scope.focusInput = (evt) => {
+            console.log('Focus')
+          }
+          $scope.blurInput = (evt) => {
+            console.log('Blur')
+          }
+
           var HistoricoService = new GumgaRest('http://192.168.25.250/gileadeweb-api/api/historico');
           gumgaController.createRestMethods($scope, HistoricoService, 'historico');
 
@@ -113,7 +135,7 @@
           gumgaController.createRestMethods($scope, PessoaService, 'pessoas');
           // $scope.pessoas.methods.get();
 
-  
+
           $scope.teste = (nome) => {
             console.log('Salvar: ', nome);
           }

@@ -458,6 +458,7 @@
 
         manyToOneCtrl.inputBlur = (event) => {
           $timeout(() => {
+            manyToOneCtrl.ngBlur ? manyToOneCtrl.ngBlur(event) : angular.noop()
             delete manyToOneCtrl.opened;
             delete manyToOneCtrl.noResults;
             if (!manyToOneCtrl.value) {
@@ -469,6 +470,10 @@
 
         manyToOneCtrl.inputFocus = (event) => {
           $timeout(() => {
+            if (manyToOneCtrl.handleOperation) {
+              manyToOneCtrl.ngFocus ? manyToOneCtrl.ngFocus(event) : angular.noop()
+            }
+            manyToOneCtrl.handleOperation = true
             manyToOneCtrl.opened = true;
             manyToOneCtrl.proxySearch(manyToOneCtrl.lastParam);
           })
@@ -787,7 +792,9 @@
         async: '=?',
         infinityPagination: '=?',
         debounce: '@?',
-        ngRequired: '=?'
+        ngRequired: '=?',
+        ngFocus: '&?',
+        ngBlur: '&?'
       },
       controllerAs: 'manyToOneCtrl',
       bindToController: true,

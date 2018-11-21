@@ -525,6 +525,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         manyToOneCtrl.inputBlur = function (event) {
           $timeout(function () {
+            manyToOneCtrl.ngBlur ? manyToOneCtrl.ngBlur(event) : angular.noop();
             delete manyToOneCtrl.opened;
             delete manyToOneCtrl.noResults;
             if (!manyToOneCtrl.value) {
@@ -536,6 +537,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         manyToOneCtrl.inputFocus = function (event) {
           $timeout(function () {
+            if (manyToOneCtrl.handleOperation) {
+              manyToOneCtrl.ngFocus ? manyToOneCtrl.ngFocus(event) : angular.noop();
+            }
+            manyToOneCtrl.handleOperation = true;
             manyToOneCtrl.opened = true;
             manyToOneCtrl.proxySearch(manyToOneCtrl.lastParam);
           });
@@ -632,7 +637,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         async: '=?',
         infinityPagination: '=?',
         debounce: '@?',
-        ngRequired: '=?'
+        ngRequired: '=?',
+        ngFocus: '&?',
+        ngBlur: '&?'
       },
       controllerAs: 'manyToOneCtrl',
       bindToController: true,
