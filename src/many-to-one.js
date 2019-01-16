@@ -183,12 +183,13 @@
 
           function mountModalBody() {
             let fields = manyToOneCtrl.postFields;
+            const labels = manyToOneCtrl.labelsModal || {}
             return fields.reduce((prev, next) => {
               let field = next.indexOf(':') != -1 ? next.trim().substring(0, next.indexOf(':')) : next.trim();
               let required = next.indexOf(':') != -1 ? next.trim().substring(next.indexOf(':') + 1, next.length) : 'false';
               return prev += `
                   <div class="form-group">
-                    <label>${field}</label>
+                    <label>${labels[field] ? labels[field] : field}</label>
                     <input type="text" class="form-control" ${required == 'required' ? required : ''} ng-model="ctrl.object.${field}" />
                   </div>`;
             }, ' ');
@@ -778,6 +779,7 @@
         searchMethod: '&',
         postMethod: '&?',
         onSelect: '&?',
+        labelsModal: '=?',
         activeFavorite: '=?',
         onDeselect: '&?',
         onRegisterClick: '&?',

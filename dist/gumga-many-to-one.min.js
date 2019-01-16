@@ -280,10 +280,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
           function mountModalBody() {
             var fields = manyToOneCtrl.postFields;
+            var labels = manyToOneCtrl.labelsModal || {};
             return fields.reduce(function (prev, next) {
               var field = next.indexOf(':') != -1 ? next.trim().substring(0, next.indexOf(':')) : next.trim();
               var required = next.indexOf(':') != -1 ? next.trim().substring(next.indexOf(':') + 1, next.length) : 'false';
-              return prev += '\n                  <div class="form-group">\n                    <label>' + field + '</label>\n                    <input type="text" class="form-control" ' + (required == 'required' ? required : '') + ' ng-model="ctrl.object.' + field + '" />\n                  </div>';
+              return prev += '\n                  <div class="form-group">\n                    <label>' + (labels[field] ? labels[field] : field) + '</label>\n                    <input type="text" class="form-control" ' + (required == 'required' ? required : '') + ' ng-model="ctrl.object.' + field + '" />\n                  </div>';
             }, ' ');
           }
 
@@ -623,6 +624,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         searchMethod: '&',
         postMethod: '&?',
         onSelect: '&?',
+        labelsModal: '=?',
         activeFavorite: '=?',
         onDeselect: '&?',
         onRegisterClick: '&?',

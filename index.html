@@ -38,15 +38,16 @@
                                  field="name"
                                  min-letter="2"
                                  ng-required="true"
-                                 authorize-add="false"
+                                 authorize-add="true"
+                                 post-fields="name:true"
+                                 labels-modal="{name: 'Nome'}"
                                  active-favorite="true"
                                  async="true"
-                                 on-register-click="teste(param)"
                                  display-info="true">
                 <match>
                   <div>{{match.model.name}}</div>
                 </match>
-                <gmto-register>
+                <!-- <gmto-register>
                   <gmto-register-label>
                     Nenhum dos
                     <b> {{ $value }} </b> listado é o que procura?
@@ -54,7 +55,7 @@
                   <gmto-register-button>
                     Cadastre
                   </gmto-register-button>
-                </gmto-register>
+                </gmto-register> -->
               </gumga-many-to-one>
 
               <br>
